@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiển Thị Text Full Screen</title>
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      resize: none;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 12px 20px;
+      background: #007bff;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* FULLSCREEN */
+    #fullscreenBox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #111;
+      color: white;
+      z-index: 9999;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    #fullContent {
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 1.4;
+      max-width: 95%;
+    }
+
+    /* Controls */
+    #controls {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .controlBtn {
+      background: rgba(255,255,255,0.18);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {      /* Tablet */
+      #fullContent { font-size: 28px; }
+    }
+
+    @media (max-width: 480px) {      /* Mobile */
+      #fullContent { font-size: 22px; }
+      .controlBtn { font-size: 16px; padding: 8px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h3>Nhập nội dung:</h3>
+  <textarea id="inputText" rows="5"></textarea>
+  <button onclick="showFull()">Hiển thị toàn màn hình</button>
+
+  <!-- FULLSCREEN BOX -->
+  <div id="fullscreenBox">
+
+    <div id="controls">
+      <div class="controlBtn" onclick="increaseFont()">A+</div>
+      <div class="controlBtn" onclick="decreaseFont()">A−</div>
+      <div class="controlBtn" onclick="closeFull()">Đóng ✕</div>
+    </div>
+
+    <div id="fullContent"></div>
+
+  </div>
+
+  <script>
+    let fontSize = 36;
+
+    function showFull() {
+      let text = document.getElementById("inputText").value;
+      document.getElementById("fullContent").innerText = text;
+      document.getElementById("fullscreenBox").style.display = "flex";
+      document.getElementById("fullContent").style.fontSize = fontSize + "px";
+    }
+
+    function closeFull() {
+      document.getElementById("fullscreenBox").style.display = "none";
+    }
+
+    function increaseFont() {
+      fontSize += 3;
+      document.getElementById("fullContent").style.fontSize = fontSize + "px";
+    }
+
+    function decreaseFont() {
+      if (fontSize > 12) fontSize -= 3;
+      document.getElementById("fullContent").style.fontSize = fontSize + "px";
+    }
+  </script>
+
+</body>
+</html>
