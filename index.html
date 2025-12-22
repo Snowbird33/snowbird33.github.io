@@ -1,894 +1,798 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Productivity Suite : Documents : QR : PDF</title>
-  <meta name="description" content="Modern office-style landing for 3 Android apps: Document Reader, QR Scanner, and Image to PDF." />
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Productivity Suite: Documents + QR + PDF</title>
   <style>
     :root{
-      --bg:#f6f7fb;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --shadow: 0 14px 40px rgba(17,24,39,.10);
-      --radius:18px;
-
-      --brand:#2563eb;
-      --brand2:#06b6d4;
-
-      --chip:#f3f4f6;
-      --chipHover:#eef2ff;
-      --focus: 0 0 0 4px rgba(37,99,235,.18);
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.56);
+      --line: rgba(255,255,255,.14);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --shadow2: 0 10px 30px rgba(0,0,0,.30);
+      --radius: 18px;
+      --radius2: 26px;
+      --accent: #6ee7ff;
+      --accent2: #a78bfa;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --danger: #fb7185;
+      --max: 1120px;
+      --pad: 18px;
+      --pad2: 26px;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color:var(--text);
+      font-family: var(--font);
+      color: var(--text);
       background:
-        radial-gradient(1000px 420px at 15% 0%, rgba(37,99,235,.10), transparent 60%),
-        radial-gradient(900px 420px at 90% 10%, rgba(6,182,212,.12), transparent 60%),
-        linear-gradient(180deg, var(--bg), #ffffff);
+        radial-gradient(1200px 600px at 15% -10%, rgba(110,231,255,.22), transparent 55%),
+        radial-gradient(1100px 600px at 85% 0%, rgba(167,139,250,.22), transparent 55%),
+        radial-gradient(900px 700px at 50% 110%, rgba(52,211,153,.14), transparent 50%),
+        linear-gradient(180deg, #070b14 0%, var(--bg) 55%, #070b14 100%);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x:hidden;
     }
-    a{ color:inherit; text-decoration:none; }
 
-    .wrap{ width:min(1100px, 92vw); margin:0 auto; padding: 18px 0 44px; }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding: 0 var(--pad)}
+    .safe{padding-bottom: max(24px, env(safe-area-inset-bottom));}
 
     /* Top bar */
     .topbar{
       position: sticky;
-      top:0;
+      top: 0;
       z-index: 50;
-      background: rgba(246,247,251,.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(11,18,32,.88) 0%, rgba(11,18,32,.64) 100%);
       border-bottom: 1px solid var(--line);
     }
     .topbar-inner{
-      width:min(1100px, 92vw);
-      margin:0 auto;
-      padding: 12px 0;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
+      padding: 12px var(--pad);
+      max-width: var(--max);
+      margin: 0 auto;
     }
-
     .brand{
       display:flex;
       align-items:center;
       gap:10px;
-      min-width:0;
+      min-width: 0;
     }
     .mark{
-      width:36px;height:36px;border-radius:12px;
-      background: linear-gradient(135deg, var(--brand), var(--brand2));
-      box-shadow: 0 10px 24px rgba(37,99,235,.20);
-      flex:0 0 auto;
+      width:36px; height:36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(110,231,255,.9), rgba(167,139,250,.85));
+      box-shadow: var(--shadow2);
+      position: relative;
+      overflow:hidden;
     }
-    .brand-txt{ min-width:0; }
-    .brand-txt b{
-      display:block;
-      font-size:14px;
+    .mark:before{
+      content:"";
+      position:absolute; inset:-35%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.75), transparent 55%);
+      transform: rotate(18deg);
+    }
+    .brand-title{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+      min-width:0;
+    }
+    .brand-title b{
+      font-size: 14px;
       letter-spacing:.2px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .brand-txt span{
-      display:block;
-      margin-top:2px;
-      font-size:12px;
-      color:var(--muted);
+    .brand-title span{
+      font-size: 12px;
+      color: var(--muted);
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-
-    .tabs{
-      display:flex;
-      gap:8px;
+    .nav{
+      display:flex; align-items:center; gap:10px;
       flex-wrap:wrap;
       justify-content:flex-end;
     }
     .chip{
-      border:1px solid var(--line);
-      background: var(--chip);
-      color: #1f2937;
-      padding: 10px 12px;
+      font-size: 12px;
+      padding: 8px 10px;
       border-radius: 999px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
-      transition:.15s ease;
-      display:flex;
-      align-items:center;
-      gap:8px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
     }
-    .chip:hover{ background: var(--chipHover); border-color: rgba(37,99,235,.22); }
-    .chip:focus{ outline:none; box-shadow: var(--focus); }
-    .chip.active{
-      background: rgba(37,99,235,.10);
-      border-color: rgba(37,99,235,.32);
-      color: #0b1b4a;
+    .chip:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.22);
+      color: rgba(255,255,255,.85);
     }
 
     /* Hero */
-    .hero{
-      margin-top: 18px;
-      background: var(--card);
-      border:1px solid var(--line);
-      border-radius: var(--radius);
+    .hero{padding: 40px 0 16px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .hero-card{
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border-radius: var(--radius2);
       box-shadow: var(--shadow);
       overflow:hidden;
+      position:relative;
     }
-    .hero-inner{
-      padding: 22px 22px 18px;
-      display:grid;
-      grid-template-columns: 1.3fr .7fr;
-      gap:16px;
-      align-items:center;
-    }
-    @media (max-width: 880px){
-      .hero-inner{ grid-template-columns: 1fr; }
-    }
-    .badge{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 7px 10px;
+    .hero-card .inner{padding: 26px}
+    .kicker{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px;
+      color: var(--muted);
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      padding: 8px 10px;
       border-radius: 999px;
-      background: rgba(37,99,235,.08);
-      border: 1px solid rgba(37,99,235,.18);
-      color:#0b1b4a;
-      font-weight: 800;
-      font-size: 12.5px;
-      width: fit-content;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 6px rgba(110,231,255,.08);
     }
     h1{
-      margin: 10px 0 8px;
-      font-size: clamp(24px, 3.8vw, 38px);
-      line-height:1.12;
-      letter-spacing: -.3px;
+      margin: 14px 0 10px;
+      font-size: clamp(26px, 4.2vw, 44px);
+      line-height: 1.08;
+      letter-spacing: -.6px;
     }
-    .sub{
-      margin:0;
+    .lead{
+      margin: 0 0 18px;
       color: var(--muted);
-      font-size: 15px;
-      line-height:1.55;
-      max-width: 72ch;
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 62ch;
     }
-    .cta{
-      margin-top: 14px;
+    .cta-row{
       display:flex;
-      gap:10px;
       flex-wrap:wrap;
+      gap:10px;
+      margin-top: 8px;
     }
     .btn{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:10px;
-      padding: 11px 13px;
-      border-radius: 14px;
-      border:1px solid var(--line);
-      background: #fff;
-      font-weight: 800;
-      font-size: 14px;
-      cursor:pointer;
-      transition:.15s ease;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.88);
+      font-weight: 700;
+      font-size: 13px;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
       user-select:none;
     }
-    .btn:hover{ transform: translateY(-1px); box-shadow: 0 12px 26px rgba(17,24,39,.08); }
-    .btn:focus{ outline:none; box-shadow: var(--focus); }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.22);
+    }
     .btn.primary{
-      border-color: rgba(37,99,235,.28);
-      background: linear-gradient(180deg, rgba(37,99,235,.12), rgba(37,99,235,.06));
-      color:#0b1b4a;
+      border-color: rgba(110,231,255,.32);
+      background: linear-gradient(135deg, rgba(110,231,255,.18), rgba(167,139,250,.16));
     }
-
-    .hero-aside{
-      padding: 18px;
-      border-left: 1px solid var(--line);
-      background: linear-gradient(180deg, #ffffff, #f7f9ff);
-      height: 100%;
-    }
-    @media (max-width: 880px){
-      .hero-aside{ border-left:0; border-top:1px solid var(--line); }
-    }
-    .stat{
+    .btn .arrow{
+      width: 18px; height: 18px;
+      border-radius: 8px;
       display:grid;
-      gap:10px;
-    }
-    .statItem{
-      border:1px solid var(--line);
-      border-radius: 16px;
-      padding: 12px;
-      background:#fff;
-    }
-    .statItem b{ display:block; font-size: 13px; }
-    .statItem span{ display:block; margin-top:4px; color:var(--muted); font-size: 12.8px; }
-    .tiny{
-      font-size:12.5px;
-      color: var(--muted);
-      margin: 10px 0 0;
+      place-items:center;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      font-size: 12px;
     }
 
-    /* Sections */
-    .section{ display:none; margin-top: 18px; }
-    .section.show{ display:block; }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:16px;
-    }
-    @media (max-width: 880px){ .grid{ grid-template-columns: 1fr; } }
-
-    .card{
-      background: var(--card);
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 20px;
-    }
-
-    .appHead{
+    .hero-side{
       display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 8px;
+      flex-direction:column;
+      gap: 12px;
     }
-    .appName{
+    .mini{
       display:flex;
-      gap:12px;
-      align-items:flex-start;
-      min-width:0;
+      gap: 12px;
+      align-items:center;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      transition: transform .15s ease, background .15s ease;
     }
-    .icon{
-      width:52px;height:52px;
-      border-radius: 16px;
-      border:1px solid var(--line);
-      background:#f3f4f6;
+    .mini:hover{transform: translateY(-1px); background: rgba(255,255,255,.06);}
+    .app-ico{
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
       overflow:hidden;
-      flex:0 0 auto;
+      flex: 0 0 auto;
     }
-    .icon img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .title h2{ margin:0; font-size: 18px; letter-spacing: -.2px; }
-    .title p{ margin:6px 0 0; color:var(--muted); font-size: 13.8px; }
-
+    .app-ico img{width:100%; height:100%; object-fit: cover; display:block}
+    .mini .meta{min-width:0}
+    .mini .meta b{
+      display:block;
+      font-size: 13px;
+      letter-spacing:.1px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .mini .meta span{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
     .pill{
+      margin-left:auto;
+      font-size: 11px;
+      color: rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.05);
       padding: 7px 10px;
       border-radius: 999px;
-      border:1px solid var(--line);
-      background:#fafafa;
-      color:#374151;
-      font-weight: 800;
-      font-size: 12px;
       white-space:nowrap;
     }
 
-    .lead{
-      margin: 10px 0 12px;
+    /* Sections */
+    section{padding: 18px 0}
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 14px;
+      margin: 22px 0 12px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size: 20px;
+      letter-spacing: -.2px;
+    }
+    .section-head p{
+      margin:0;
       color: var(--muted);
-      font-size: 14.5px;
+      font-size: 13px;
       line-height:1.6;
+      max-width: 64ch;
     }
 
-    .links{
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .card{
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .card-inner{padding: var(--pad2)}
+    .card-top{
       display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 8px;
-    }
-    .linkBtn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border:1px solid var(--line);
-      background:#fff;
-      font-weight: 800;
-      font-size: 13.5px;
-      transition:.15s ease;
-    }
-    .linkBtn:hover{ background:#f9fafb; transform: translateY(-1px); }
-    .linkBtn:focus{ outline:none; box-shadow: var(--focus); }
-    .linkBtn i{
-      font-style: normal;
-      width:26px;height:26px;border-radius:10px;
-      display:grid;place-items:center;
-      border:1px solid var(--line);
-      background:#f3f4f6;
-      color:#111827;
-      font-weight: 900;
-    }
-
-    .notice{
-      margin-top: 12px;
-      padding: 12px 12px;
-      border-radius: 16px;
-      border:1px dashed rgba(245,158,11,.45);
-      background: rgba(245,158,11,.10);
-      color:#6b4b00;
-      font-size: 13.5px;
-      line-height:1.55;
-    }
-    .notice b{ color:#3f2c00; }
-
-    /* Feature list */
-    .list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
-    .li{
-      display:flex;
-      gap:10px;
       align-items:flex-start;
-      border:1px solid var(--line);
+      justify-content:space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .title-row{
+      display:flex; align-items:center; gap: 12px;
+      min-width:0;
+    }
+    .title-row h3{
+      margin:0;
+      font-size: 16px;
+      letter-spacing:-.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 78ch;
+    }
+
+    .feature-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .feat{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
       border-radius: 16px;
       padding: 12px;
-      background:#fff;
+      min-height: 76px;
     }
-    .dot{
-      width:28px;height:28px;border-radius:10px;
-      display:grid;place-items:center;
-      border:1px solid var(--line);
-      background:#f3f4f6;
-      flex:0 0 auto;
-      margin-top: 1px;
-      font-size: 14px;
+    .feat b{
+      display:block;
+      font-size: 12px;
+      letter-spacing:.1px;
+      margin-bottom: 4px;
     }
-    .li b{ display:block; font-size: 14px; }
-    .li span{ display:block; margin-top:2px; color:var(--muted); font-size: 13.5px; }
+    .feat span{
+      display:block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
 
-    /* Media: banner + slider */
-    .media{
-      padding: 14px;
-      border:1px solid var(--line);
-      border-radius: 16px;
-      background:#fff;
+    /* Screenshots */
+    .shots{
+      margin-top: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
     }
-    .banner{
-      border:1px solid var(--line);
-      border-radius: 14px;
-      overflow:hidden;
-      background:#f3f4f6;
+    .shots h4{
+      margin:0 0 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,.88);
+      letter-spacing:.1px;
     }
-    .banner img{ width:100%; height:auto; display:block; }
-
-    .slider{
-      margin-top: 12px;
-      border:1px solid var(--line);
-      border-radius: 14px;
-      overflow:hidden;
-      position:relative;
-      background:#f3f4f6;
-    }
-    .stage{
+    .strip{
       display:flex;
-      transition: transform .22s ease;
-      will-change: transform;
-    }
-    .slide{
-      min-width: 100%;
-      cursor: zoom-in;
-      user-select:none;
-      background:#f3f4f6;
-    }
-    .slide img{ width:100%; height:auto; display:block; }
-
-    .navBtn{
-      position:absolute;
-      top:50%;
-      transform: translateY(-50%);
-      width:40px;height:40px;
-      border-radius: 12px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.86);
-      display:grid;place-items:center;
-      cursor:pointer;
-      user-select:none;
-      transition:.15s ease;
-    }
-    .navBtn:hover{ background:#fff; box-shadow: 0 10px 24px rgba(17,24,39,.10); }
-    .prev{ left:10px; }
-    .next{ right:10px; }
-
-    .thumbs{
-      margin-top: 10px;
-      display:flex;
-      gap:10px;
+      gap: 10px;
       overflow:auto;
-      padding-bottom: 2px;
+      padding-bottom: 6px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
     }
-    .thumb{
-      width:92px;
-      flex:0 0 auto;
-      border-radius: 12px;
-      border:2px solid transparent;
-      background:#f3f4f6;
+    .shot{
+      scroll-snap-align: start;
+      flex: 0 0 auto;
+      width: 240px;
+      border-radius: 16px;
       overflow:hidden;
-      cursor:pointer;
-      transition:.15s ease;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.03);
     }
-    .thumb.active{ border-color: rgba(37,99,235,.55); }
-    .thumb img{ width:100%; height:60px; object-fit:cover; display:block; }
+    .shot img{
+      width: 100%;
+      height: 100%;
+      display:block;
+      object-fit: cover;
+    }
+    .shot.wide{width: 340px}
+    .shot.tall{width: 220px}
 
-    .foot{
-      margin-top: 18px;
-      padding-top: 10px;
-      border-top:1px solid var(--line);
+    /* Notes */
+    .note{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .badge{
+      flex:0 0 auto;
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-weight: 800;
+      color: rgba(255,255,255,.9);
+    }
+    .note p{
+      margin: 0;
       color: var(--muted);
       font-size: 12.5px;
-      text-align:center;
+      line-height: 1.7;
     }
 
-    /* Fullscreen modal */
-    .modal{
-      position:fixed;
-      inset:0;
-      background: rgba(17,24,39,.65);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index: 999;
-      padding: 18px;
+    /* Footer */
+    footer{
+      padding: 26px 0 34px;
+      border-top: 1px solid var(--line);
+      margin-top: 18px;
+      color: var(--muted2);
+      font-size: 12px;
     }
-    .modal.show{ display:flex; }
-    .modalBox{
-      width:min(980px, 96vw);
-      max-height: 92vh;
-      border-radius: 16px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.22);
-      background:#0b1020;
-      position:relative;
-      box-shadow: 0 22px 70px rgba(0,0,0,.35);
-    }
-    .modalImg{
-      width:100%;
-      height:auto;
-      display:block;
-      max-height: 92vh;
-      object-fit: contain;
-      background: rgba(0,0,0,.25);
-    }
-    .modalTop{
-      position:absolute;
-      top:10px; left:10px; right:10px;
+    .foot{
       display:flex;
-      justify-content:space-between;
-      gap:10px;
-      pointer-events:none;
-    }
-    .mchip{
-      pointer-events:auto;
-      display:inline-flex;
       align-items:center;
-      gap:10px;
-      padding: 9px 11px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.35);
-      color: rgba(255,255,255,.92);
-      font-weight: 800;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .mutelink{
+      color: var(--muted);
+      border-bottom: 1px dashed rgba(255,255,255,.22);
+    }
+
+    /* Responsive */
+    @media (max-width: 920px){
+      .hero-grid{grid-template-columns: 1fr}
+      .hero-side{flex-direction: row; overflow:auto; padding-bottom: 6px}
+      .mini{min-width: 280px; flex: 0 0 auto}
+      .feature-grid{grid-template-columns: 1fr}
+      .shot{width: 210px}
+      .shot.wide{width: 300px}
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      *{scroll-behavior:auto !important; transition:none !important}
     }
   </style>
 </head>
 
 <body>
-  <div class="topbar">
+  <!-- Top bar -->
+  <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
         <div class="mark" aria-hidden="true"></div>
-        <div class="brand-txt">
-          <b>Productivity Suite</b>
-          <span>Documents • QR Scanner • Image to PDF</span>
+        <div class="brand-title">
+          <b>Productivity Apps</b>
+          <span>Documents • QR • PDF Tools</span>
         </div>
       </div>
+      <nav class="nav" aria-label="Page navigation">
+        <a class="chip" href="#apps">Apps</a>
+        <a class="chip" href="#document">Document Reader</a>
+        <a class="chip" href="#qr">QR Scanner</a>
+        <a class="chip" href="#pdf">Image to PDF</a>
+      </nav>
+    </div>
+  </header>
 
-      <div class="tabs" role="navigation" aria-label="Tabs">
-        <div class="chip active" data-target="home">Home</div>
-        <div class="chip" data-target="doc">Document</div>
-        <div class="chip" data-target="qr">QR Scanner</div>
-        <div class="chip" data-target="pdf">PDF Tools</div>
+  <!-- Hero -->
+  <main class="wrap safe">
+    <div class="hero">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="inner">
+            <div class="kicker"><span class="dot" aria-hidden="true"></span> Modern office-style landing page for WebView</div>
+            <h1>One simple hub for <span style="color:var(--accent)">documents</span>, <span style="color:var(--accent2)">QR</span>, and <span style="color:var(--ok)">PDF</span> productivity.</h1>
+            <p class="lead">
+              Unlock the power of productivity with three lightweight Android apps:
+              manage office files, scan & generate QR/barcodes, and convert images to PDF while editing PDFs on the go.
+              Clean UI, fast performance, and privacy-friendly workflows.
+            </p>
+
+            <div class="cta-row">
+              <a class="btn primary" href="#apps">
+                Explore apps <span class="arrow">→</span>
+              </a>
+              <a class="btn" href="https://play.google.com/store/apps/details?id=com.all.document.reader.my.pdf">
+                Document Reader <span class="arrow">↗</span>
+              </a>
+              <a class="btn" href="https://play.google.com/store/apps/details?id=com.simple.app.qrcodeqr.barcode">
+                QR Scanner <span class="arrow">↗</span>
+              </a>
+              <a class="btn" href="https://play.google.com/store/apps/details?id=pdf.free.pdfreaderfree.reader.pdf.view.lovepdf">
+                Image to PDF <span class="arrow">↗</span>
+              </a>
+            </div>
+
+            <div class="note" style="margin-top:16px">
+              <div class="badge">i</div>
+              <p>
+                Tip: This page is designed to look great inside Android WebView (mobile-first, smooth scrolling, safe-area padding).
+                Replace any image URLs easily by updating the <b>IMG_BASE</b> constant in the script below.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side mini cards -->
+        <div class="hero-side" id="apps">
+          <a class="mini" href="#document">
+            <div class="app-ico"><img data-img="Icon12345-new.png" alt="Document Reader icon"></div>
+            <div class="meta">
+              <b>My Document Reader</b>
+              <span>PDF, DOCX, XLSX, PPTX, TXT + tools</span>
+            </div>
+            <div class="pill">All-in-One</div>
+          </a>
+
+          <a class="mini" href="#qr">
+            <div class="app-ico"><img data-img="icon%20QR-01%203.png" alt="QR & Barcode Scanner icon"></div>
+            <div class="meta">
+              <b>All QR Scanner & Generator</b>
+              <span>Scan, create, history, batch, gallery</span>
+            </div>
+            <div class="pill">Fast Scan</div>
+          </a>
+
+          <a class="mini" href="#pdf">
+            <div class="app-ico"><img data-img="512x512.png" alt="Image to PDF icon"></div>
+            <div class="meta">
+              <b>Image to PDF and Edit PDF</b>
+              <span>Convert, edit, merge, split, compress</span>
+            </div>
+            <div class="pill">PDF Pro</div>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <main class="wrap">
-    <!-- HOME -->
-    <section id="home" class="hero section show" aria-label="Home">
-      <div class="hero-inner">
+    <!-- Document Reader -->
+    <section id="document">
+      <div class="section-head">
         <div>
-          <div class="badge">⚡ Modern office • simple • fast</div>
-          <h1>One suite for daily work : documents, QR scanning, and PDF tools.</h1>
-          <p class="sub">
-            A clean and modern set of Android apps for productivity. Open files instantly, scan QR codes securely,
-            and convert or edit PDFs anytime.
+          <h2>My Document Reader: Read, Edit & Scan Office Files</h2>
+          <p>
+            Your all-in-one solution for reading, editing, and scanning documents.
+            From PDFs and text files to DOCX, XLSX, and PPTX: everything in one smart, intuitive app.
           </p>
-
-          <div class="cta">
-            <a class="btn primary" href="#doc" data-jump="doc">Open Document</a>
-            <a class="btn" href="#qr" data-jump="qr">Open QR Scanner</a>
-            <a class="btn" href="#pdf" data-jump="pdf">Open PDF Tools</a>
-          </div>
-        </div>
-
-        <aside class="hero-aside">
-          <div class="stat">
-            <div class="statItem">
-              <b>Designed for WebView</b>
-              <span>Lightweight HTML5 with smooth navigation.</span>
-            </div>
-            <div class="statItem">
-              <b>Clean office layout</b>
-              <span>Simple cards, clear text, no clutter.</span>
-            </div>
-            <div class="statItem">
-              <b>Showcase images</b>
-              <span>Slider + fullscreen preview.</span>
-            </div>
-          </div>
-          <p class="tiny">Tip : host images in your folder for best performance.</p>
-        </aside>
-      </div>
-    </section>
-
-    <!-- DOCUMENT -->
-    <section id="doc" class="section" aria-label="All Document Reader">
-      <div class="grid">
-        <div class="card">
-          <div class="appHead">
-            <div class="appName">
-              <div class="icon" aria-hidden="true">
-                <img id="docIcon" src="" alt="All Document Icon" referrerpolicy="no-referrer" />
-              </div>
-              <div class="title" style="min-width:0;">
-                <h2>All Document Reader : My PDF</h2>
-                <p>All-in-one reader : PDF, Word, Excel, PPT.</p>
-              </div>
-            </div>
-            <div class="pill">Office files</div>
-          </div>
-
-          <p class="lead">
-            Read and manage all your documents in one app. Smooth performance, clean UI, and offline support.
-          </p>
-
-          <div class="links">
-            <a class="linkBtn" href="https://play.google.com/store/apps/details?id=com.all.document.reader.my.pdf">
-              <i>▶</i> Google Play
-            </a>
-            <a class="linkBtn" href="#home" data-jump="home">
-              <i>↩</i> Home
-            </a>
-          </div>
-
-          <div class="notice">
-            <b>Permission Notice (Android 11+):</b> This app may request <b>MANAGE_EXTERNAL_STORAGE</b> to access and manage
-            your documents. It is used only for file handling.
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="media">
-            <div class="banner">
-              <img id="docBanner" src="" alt="Document banner" loading="lazy" referrerpolicy="no-referrer" />
-            </div>
-
-            <div class="slider" id="docSlider" aria-label="Document screenshots slider">
-              <div class="navBtn prev" data-nav="prev" aria-label="Previous">‹</div>
-              <div class="navBtn next" data-nav="next" aria-label="Next">›</div>
-              <div class="stage" id="docStage"></div>
-            </div>
-
-            <div class="thumbs" id="docThumbs" aria-label="Document thumbnails"></div>
-          </div>
         </div>
       </div>
 
-      <div class="grid" style="margin-top:16px;">
-        <div class="card">
-          <ul class="list">
-            <li class="li"><div class="dot">📂</div><div><b>All-in-One Manager</b><span>PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, TXT, CSV and more. Auto-scan and organize your files.</span></div></li>
-            <li class="li"><div class="dot">📄</div><div><b>Fast PDF Viewer</b><span>Smooth reading, zoom, scroll, and quick navigation.</span></div></li>
-            <li class="li"><div class="dot">🔎</div><div><b>Smart Search</b><span>Find documents and keywords instantly.</span></div></li>
-          </ul>
-        </div>
-        <div class="card">
-          <ul class="list">
-            <li class="li"><div class="dot">📝</div><div><b>Office Formats</b><span>Open Word, Excel, and PPT with clear rendering.</span></div></li>
-            <li class="li"><div class="dot">🧩</div><div><b>PDF Tools</b><span>Merge, split, extract text/images, and compress files.</span></div></li>
-            <li class="li"><div class="dot">🔒</div><div><b>Offline & Private</b><span>No internet required for reading. Your files stay on your device.</span></div></li>
-          </ul>
+      <div class="card">
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="title-row">
+              <div class="app-ico" style="width:54px;height:54px;border-radius:16px">
+                <img data-img="Icon12345-new.png" alt="My Document Reader icon">
+              </div>
+              <div style="min-width:0">
+                <h3>All Document Reader & Editor</h3>
+                <p class="sub">
+                  No more switching between apps. View, organize, search, and share your documents with a smooth, modern experience.
+                  Works offline: your files stay private.
+                </p>
+              </div>
+            </div>
+            <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.all.document.reader.my.pdf">Get on Google Play <span class="arrow">↗</span></a>
+          </div>
+
+          <div class="feature-grid">
+            <div class="feat">
+              <b>All Formats Support</b>
+              <span>PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, TXT, CSV and more.</span>
+            </div>
+            <div class="feat">
+              <b>Smart File Manager</b>
+              <span>Unified dashboard, auto-scan device, quick search & organize.</span>
+            </div>
+            <div class="feat">
+              <b>Advanced Tools</b>
+              <span>Highlight, merge/split, extract text/images, compress, edit metadata.</span>
+            </div>
+          </div>
+
+          <div class="note">
+            <div class="badge" style="color:rgba(255,255,255,.92)">🔐</div>
+            <p>
+              <b>Permission notice:</b> To read and edit files on Android 11+, users may need to grant
+              <b>MANAGE_EXTERNAL_STORAGE</b>. This access is used only to manage documents on the device.
+            </p>
+          </div>
+
+          <div class="shots">
+            <h4>Screenshots</h4>
+            <div class="strip" aria-label="Document Reader screenshots">
+              <div class="shot wide"><img data-img="1024.jpg" alt="Document Reader banner"></div>
+              <div class="shot"><img data-img="1.1.png" alt="Document Reader screenshot 1"></div>
+              <div class="shot"><img data-img="2.png" alt="Document Reader screenshot 2"></div>
+              <div class="shot"><img data-img="3.png" alt="Document Reader screenshot 3"></div>
+              <div class="shot"><img data-img="4.png" alt="Document Reader screenshot 4"></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- QR -->
-    <section id="qr" class="section" aria-label="QR Code Reader & Barcode Scanner">
-      <div class="grid">
-        <div class="card">
-          <div class="appHead">
-            <div class="appName">
-              <div class="icon" aria-hidden="true">
-                <img id="qrIcon" src="" alt="QR Scanner Icon" referrerpolicy="no-referrer" />
-              </div>
-              <div class="title">
-                <h2>QR Code Reader & Barcode Scanner</h2>
-                <p>Fast scanning : accurate : offline-ready.</p>
-              </div>
-            </div>
-            <div class="pill">Scan & Create</div>
-          </div>
-
-          <p class="lead">
-            Scan QR and barcodes instantly. Supports gallery scan, history, favorites, and QR generation for Wi-Fi, links, and contacts.
+    <section id="qr">
+      <div class="section-head">
+        <div>
+          <h2>All QR Scanner & QR Generator: QR + Barcode in Seconds</h2>
+          <p>
+            The fastest, easiest, and most feature-rich QR & barcode scanner for Android.
+            Scan Wi-Fi, URL, text, coupons, ISBN, and more: online or offline.
           </p>
-
-          <div class="links">
-            <a class="linkBtn" href="https://play.google.com/store/apps/details?id=com.simple.app.qrcodeqr.barcode">
-              <i>▶</i> Google Play
-            </a>
-            <a class="linkBtn" href="#home" data-jump="home">
-              <i>↩</i> Home
-            </a>
-          </div>
-
-          <div class="notice" style="border-color: rgba(6,182,212,.45); background: rgba(6,182,212,.10); color:#064e5b;">
-            <b>Privacy:</b> Only camera permission is needed for scanning. Core features work offline.
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="media">
-            <div class="banner">
-              <img id="qrBanner" src="" alt="QR banner" loading="lazy" referrerpolicy="no-referrer" />
-            </div>
-
-            <div class="slider" id="qrSlider" aria-label="QR screenshots slider">
-              <div class="navBtn prev" data-nav="prev" aria-label="Previous">‹</div>
-              <div class="navBtn next" data-nav="next" aria-label="Next">›</div>
-              <div class="stage" id="qrStage"></div>
-            </div>
-
-            <div class="thumbs" id="qrThumbs" aria-label="QR thumbnails"></div>
-          </div>
         </div>
       </div>
 
-      <div class="grid" style="margin-top:16px;">
-        <div class="card">
-          <ul class="list">
-            <li class="li"><div class="dot">⚡</div><div><b>Auto Scan</b><span>Point the camera and scan instantly, no extra steps.</span></div></li>
-            <li class="li"><div class="dot">🖼</div><div><b>Scan from Gallery</b><span>Decode QR from photos or screenshots.</span></div></li>
-            <li class="li"><div class="dot">🧾</div><div><b>History & Export</b><span>Save, favorite, and export to .csv or .txt.</span></div></li>
-          </ul>
-        </div>
-        <div class="card">
-          <ul class="list">
-            <li class="li"><div class="dot">🧩</div><div><b>QR Generator</b><span>Create QR codes for Wi-Fi, links, contacts, phone numbers, etc.</span></div></li>
-            <li class="li"><div class="dot">🔦</div><div><b>Flashlight & Zoom</b><span>Scan easily in low-light or from a distance.</span></div></li>
-            <li class="li"><div class="dot">💰</div><div><b>Price Scan</b><span>Scan barcodes to view product info and compare prices.</span></div></li>
-          </ul>
+      <div class="card">
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="title-row">
+              <div class="app-ico" style="width:54px;height:54px;border-radius:16px">
+                <img data-img="icon%20QR-01%203.png" alt="QR & Barcode Scanner icon">
+              </div>
+              <div style="min-width:0">
+                <h3>QR Code Reader & Barcode Scanner</h3>
+                <p class="sub">
+                  Point your camera: it scans instantly. Create QR codes for Wi-Fi, contacts, text, links, and share effortlessly.
+                  Supports scan from gallery, batch scan, flashlight, zoom, and export history.
+                </p>
+              </div>
+            </div>
+            <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.simple.app.qrcodeqr.barcode">Get on Google Play <span class="arrow">↗</span></a>
+          </div>
+
+          <div class="feature-grid">
+            <div class="feat">
+              <b>Scan Everything</b>
+              <span>QR + barcodes: URL, Wi-Fi, text, email, ISBN, location, events, more.</span>
+            </div>
+            <div class="feat">
+              <b>Price & Product Scan</b>
+              <span>Check product info, compare prices, verify origins, save money.</span>
+            </div>
+            <div class="feat">
+              <b>Privacy-Friendly</b>
+              <span>Designed to work offline; only camera permission is needed for scanning.</span>
+            </div>
+          </div>
+
+          <div class="shots">
+            <h4>Screenshots</h4>
+            <div class="strip" aria-label="QR app screenshots">
+              <div class="shot wide"><img data-img="31ee356f-071b-4012-a199-1a6bdc175023.jfif" alt="QR app banner"></div>
+              <div class="shot tall"><img data-img="1.webp" alt="QR screenshot 1"></div>
+              <div class="shot tall"><img data-img="2.webp" alt="QR screenshot 2"></div>
+              <div class="shot tall"><img data-img="3.webp" alt="QR screenshot 3"></div>
+              <div class="shot tall"><img data-img="4.webp" alt="QR screenshot 4"></div>
+              <div class="shot tall"><img data-img="5.webp" alt="QR screenshot 5"></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- PDF -->
-    <section id="pdf" class="section" aria-label="Image to PDF and Edit PDF">
-      <div class="grid">
-        <div class="card">
-          <div class="appHead">
-            <div class="appName">
-              <div class="icon" aria-hidden="true"></div>
-              <div class="title">
-                <h2>Image to PDF and Edit PDF</h2>
-                <p>Read : annotate : convert : compress.</p>
+    <!-- Image to PDF -->
+    <section id="pdf">
+      <div class="section-head">
+        <div>
+          <h2>Image to PDF and Edit PDF: Convert, Read & Edit PDFs</h2>
+          <p>
+            A compact yet powerful PDF toolkit: convert images to PDF, annotate, merge/split, extract content,
+            compress files, and manage PDFs with fast performance.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="title-row">
+              <div class="app-ico" style="width:54px;height:54px;border-radius:16px">
+                <img data-img="512x512.png" alt="Image to PDF and Edit PDF icon">
+              </div>
+              <div style="min-width:0">
+                <h3>Lite PDF Reader: PDF-Centric Features</h3>
+                <p class="sub">
+                  Read and organize PDFs anytime. Highlight, underline, add notes, extract text, save pages as images,
+                  merge & split PDFs, and compress large files: no registration or hidden fees.
+                </p>
               </div>
             </div>
-            <div class="pill">PDF-centric</div>
+            <a class="btn primary" href="https://play.google.com/store/apps/details?id=pdf.free.pdfreaderfree.reader.pdf.view.lovepdf">Get on Google Play <span class="arrow">↗</span></a>
           </div>
 
-          <p class="lead">
-            A compact PDF toolkit for Android. Edit and annotate, extract text/images, merge or split files, and compress PDFs.
-          </p>
-
-          <div class="links">
-            <a class="linkBtn" href="https://play.google.com/store/apps/details?id=pdf.free.pdfreaderfree.reader.pdf.view.lovepdf">
-              <i>▶</i> Google Play
-            </a>
-            <a class="linkBtn" href="#home" data-jump="home">
-              <i>↩</i> Home
-            </a>
+          <div class="feature-grid">
+            <div class="feat">
+              <b>Edit & Annotate</b>
+              <span>Highlight, underline, add notes, and keep your reading organized.</span>
+            </div>
+            <div class="feat">
+              <b>Convert & Export</b>
+              <span>Image → PDF, PDF → TXT, save pages as images, extract images from PDF.</span>
+            </div>
+            <div class="feat">
+              <b>Optimize PDFs</b>
+              <span>Merge/split documents and compress files to save storage.</span>
+            </div>
           </div>
 
-          <div class="notice" style="border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.08); color:#6b0f0f;">
-            <b>Free to use:</b> No registration. No hidden fees. Fast and simple PDF handling.
+          <div class="shots">
+            <h4>Screenshots</h4>
+            <div class="strip" aria-label="PDF app screenshots">
+              <div class="shot wide"><img data-img="feature.jpg" alt="PDF app banner"></div>
+              <div class="shot tall"><img data-img="1.jpg" alt="PDF screenshot 1"></div>
+              <div class="shot tall"><img data-img="2.jpg" alt="PDF screenshot 2"></div>
+              <div class="shot tall"><img data-img="3.jpg" alt="PDF screenshot 3"></div>
+              <div class="shot tall"><img data-img="4.jpg" alt="PDF screenshot 4"></div>
+              <div class="shot tall"><img data-img="5.jpg" alt="PDF screenshot 5"></div>
+              <div class="shot wide"><img data-img="6.jpg" alt="PDF screenshot 6"></div>
+              <div class="shot"><img data-img="7.jpg" alt="PDF screenshot 7"></div>
+            </div>
           </div>
-        </div>
 
-        <div class="card">
-          <ul class="list">
-            <li class="li"><div class="dot">🖍️</div><div><b>Annotate PDF</b><span>Highlight, underline, and add notes quickly.</span></div></li>
-            <li class="li"><div class="dot">📌</div><div><b>Search & Extract</b><span>Find keywords and extract text to TXT.</span></div></li>
-            <li class="li"><div class="dot">🧩</div><div><b>Merge & Split</b><span>Combine PDFs or split big files into parts.</span></div></li>
-            <li class="li"><div class="dot">📉</div><div><b>Compress</b><span>Reduce file size without losing quality.</span></div></li>
-          </ul>
+          <div class="note">
+            <div class="badge">✅</div>
+            <p>
+              <b>Best workflow:</b> Scan & generate codes with QR Scanner, open office files with Document Reader,
+              and handle conversions + editing with Image to PDF: a clean, simple productivity stack.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <div class="foot">© <span id="year"></span> • Office-style UI • HTML5 for Android WebView</div>
+    <!-- Footer -->
+    <footer>
+      <div class="wrap">
+        <div class="foot">
+          <div>© <span id="y"></span> Productivity Apps. All rights reserved.</div>
+          <div>
+            Images base:
+            <span class="mutelink">snowbird33.github.io/img/</span>
+          </div>
+        </div>
+      </div>
+    </footer>
   </main>
 
-  <!-- Fullscreen modal -->
-  <div class="modal" id="imgModal" aria-label="Fullscreen image viewer">
-    <div class="modalBox">
-      <div class="modalTop">
-        <div class="mchip" id="modalTitle">Screenshot</div>
-        <div class="mchip" id="modalClose">✕ Close</div>
-      </div>
-      <img class="modalImg" id="modalImg" src="" alt="Fullscreen screenshot" referrerpolicy="no-referrer" />
-    </div>
-  </div>
-
   <script>
-    // ========= IMAGE FOLDER =========
-    // If you host all images here:
+    // Change this if you move images to another folder.
     const IMG_BASE = "https://snowbird33.github.io/img/";
 
-    // Build URL safely (supports spaces like "icon QR-01 3.png")
-    const imgUrl = (file) => IMG_BASE + encodeURIComponent(file);
+    // Auto-apply IMG_BASE to all images using data-img
+    document.querySelectorAll("img[data-img]").forEach(img => {
+      const name = img.getAttribute("data-img");
+      img.src = IMG_BASE + name;
+      img.loading = img.loading || "lazy";
+      img.decoding = img.decoding || "async";
 
-    // ========= DOCUMENT (your existing images) =========
-    const DOC_ICON   = "Icon12345-new.png";
-    const DOC_BANNER = "1024.jpg";
-    const DOC_SHOTS  = ["1.1.png", "2.png", "3.png", "4.png"];
+      // Simple fallback if a file name is wrong
+      img.addEventListener("error", () => {
+        img.style.opacity = "0.6";
+        img.alt = (img.alt || "Image") + " (missing)";
+      }, { once: true });
+    });
 
-    // ========= QR (your new images) =========
-    const QR_ICON   = "icon QR-01 3.png";
-    const QR_BANNER = "31ee356f-071b-4012-a199-1a6bdc175023.jfif";
-    const QR_SHOTS  = ["1.webp", "2.webp", "3.webp", "4.webp", "5.webp"];
-
-    // ========= Tabs =========
-    const chips = Array.from(document.querySelectorAll(".chip"));
-    const sections = Array.from(document.querySelectorAll(".section"));
-
-    function show(id){
-      sections.forEach(s => s.classList.toggle("show", s.id === id));
-      chips.forEach(c => c.classList.toggle("active", c.dataset.target === id));
-      if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    chips.forEach(c => c.addEventListener("click", () => show(c.dataset.target)));
-    document.querySelectorAll("[data-jump]").forEach(el => {
-      el.addEventListener("click", (e) => {
-        const id = el.getAttribute("data-jump");
-        if (id){
-          e.preventDefault();
-          show(id);
-        }
+    // Smooth scroll for in-page anchors (WebView-friendly)
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener("click", (e) => {
+        const id = a.getAttribute("href");
+        const el = document.querySelector(id);
+        if (!el) return;
+        e.preventDefault();
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
 
-    const initial = (location.hash || "#home").replace("#","");
-    if (sections.some(s => s.id === initial)) show(initial);
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // ========= Modal =========
-    const modal = document.getElementById("imgModal");
-    const modalImg = document.getElementById("modalImg");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalClose = document.getElementById("modalClose");
-
-    function openModal(src, title){
-      modalImg.src = src;
-      modalTitle.textContent = title || "Screenshot";
-      modal.classList.add("show");
-    }
-    function closeModal(){
-      modal.classList.remove("show");
-      modalImg.src = "";
-    }
-    modalClose.addEventListener("click", closeModal);
-    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-
-    // ========= Slider Builder =========
-    function buildSlider({ stageId, thumbsId, sliderId, shots, titlePrefix }){
-      const stage = document.getElementById(stageId);
-      const thumbs = document.getElementById(thumbsId);
-      const slider = document.getElementById(sliderId);
-
-      stage.innerHTML = "";
-      thumbs.innerHTML = "";
-
-      let idx = 0;
-
-      shots.forEach((file, i) => {
-        const url = imgUrl(file);
-
-        // Slide
-        const slide = document.createElement("div");
-        slide.className = "slide";
-        slide.dataset.full = url;
-
-        const img = document.createElement("img");
-        img.loading = "lazy";
-        img.referrerPolicy = "no-referrer";
-        img.alt = `${titlePrefix} Screenshot ${i+1}`;
-        img.src = url;
-
-        slide.appendChild(img);
-        stage.appendChild(slide);
-
-        slide.addEventListener("click", () => openModal(url, `${titlePrefix} : Screenshot ${i+1}`));
-
-        // Thumb
-        const th = document.createElement("div");
-        th.className = "thumb" + (i === 0 ? " active" : "");
-        th.dataset.idx = String(i);
-
-        const thImg = document.createElement("img");
-        thImg.loading = "lazy";
-        thImg.referrerPolicy = "no-referrer";
-        thImg.alt = `${titlePrefix} Thumb ${i+1}`;
-        thImg.src = url;
-
-        th.appendChild(thImg);
-        thumbs.appendChild(th);
-
-        th.addEventListener("click", () => setIdx(i));
-      });
-
-      function setIdx(n){
-        const max = shots.length - 1;
-        idx = Math.max(0, Math.min(max, n));
-        stage.style.transform = `translateX(${-idx * 100}%)`;
-        Array.from(thumbs.querySelectorAll(".thumb")).forEach(t =>
-          t.classList.toggle("active", Number(t.dataset.idx) === idx)
-        );
-      }
-
-      slider.querySelector('[data-nav="prev"]').addEventListener("click", () => setIdx(idx - 1));
-      slider.querySelector('[data-nav="next"]').addEventListener("click", () => setIdx(idx + 1));
-    }
-
-    // ========= Inject icons + banners =========
-    document.getElementById("docIcon").src   = imgUrl(DOC_ICON);
-    document.getElementById("docBanner").src = imgUrl(DOC_BANNER);
-
-    document.getElementById("qrIcon").src    = imgUrl(QR_ICON);
-    document.getElementById("qrBanner").src  = imgUrl(QR_BANNER);
-
-    // ========= Build sliders =========
-    buildSlider({
-      stageId: "docStage",
-      thumbsId: "docThumbs",
-      sliderId: "docSlider",
-      shots: DOC_SHOTS,
-      titlePrefix: "Document"
-    });
-
-    buildSlider({
-      stageId: "qrStage",
-      thumbsId: "qrThumbs",
-      sliderId: "qrSlider",
-      shots: QR_SHOTS,
-      titlePrefix: "QR Scanner"
-    });
+    // Footer year
+    document.getElementById("y").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
