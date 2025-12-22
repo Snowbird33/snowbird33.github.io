@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Productivity Suite • Documents • QR • PDF</title>
+  <meta name="description" content="Modern office-style landing for 3 Android apps: Document Reader, QR Scanner, and Image to PDF." />
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --shadow: 0 14px 40px rgba(17,24,39,.10);
+      --radius:18px;
+
+      --brand:#2563eb;      /* blue */
+      --brand2:#06b6d4;     /* cyan */
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+
+      --chip:#f3f4f6;
+      --chipHover:#eef2ff;
+      --focus: 0 0 0 4px rgba(37,99,235,.18);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 420px at 15% 0%, rgba(37,99,235,.10), transparent 60%),
+        radial-gradient(900px 420px at 90% 10%, rgba(6,182,212,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg), #ffffff);
+    }
+    a{ color:inherit; text-decoration:none; }
+    button{ font:inherit; }
+
+    .wrap{ width:min(1100px, 92vw); margin:0 auto; padding: 18px 0 44px; }
+
+    /* Top bar (office style) */
+    .topbar{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      background: rgba(246,247,251,.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner{
+      width:min(1100px, 92vw);
+      margin:0 auto;
+      padding: 12px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .mark{
+      width:36px;height:36px;border-radius:12px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 10px 24px rgba(37,99,235,.20);
+      flex:0 0 auto;
+    }
+    .brand-txt{ min-width:0; }
+    .brand-txt b{
+      display:block;
+      font-size:14px;
+      letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .brand-txt span{
+      display:block;
+      margin-top:2px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      border:1px solid var(--line);
+      background: var(--chip);
+      color: #1f2937;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+      transition:.15s ease;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .chip:hover{ background: var(--chipHover); border-color: rgba(37,99,235,.22); }
+    .chip:focus{ outline:none; box-shadow: var(--focus); }
+    .chip.active{
+      background: rgba(37,99,235,.10);
+      border-color: rgba(37,99,235,.32);
+      color: #0b1b4a;
+    }
+
+    /* Hero */
+    .hero{
+      margin-top: 18px;
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero-inner{
+      padding: 22px 22px 18px;
+      display:grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap:16px;
+      align-items:center;
+    }
+    @media (max-width: 880px){
+      .hero-inner{ grid-template-columns: 1fr; }
+    }
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(37,99,235,.08);
+      border: 1px solid rgba(37,99,235,.18);
+      color:#0b1b4a;
+      font-weight: 800;
+      font-size: 12.5px;
+      width: fit-content;
+    }
+    h1{
+      margin: 10px 0 8px;
+      font-size: clamp(24px, 3.8vw, 38px);
+      line-height:1.12;
+      letter-spacing: -.3px;
+    }
+    .sub{
+      margin:0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height:1.55;
+      max-width: 72ch;
+    }
+    .cta{
+      margin-top: 14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 11px 13px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      cursor:pointer;
+      transition:.15s ease;
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 12px 26px rgba(17,24,39,.08); }
+    .btn:focus{ outline:none; box-shadow: var(--focus); }
+    .btn.primary{
+      border-color: rgba(37,99,235,.28);
+      background: linear-gradient(180deg, rgba(37,99,235,.12), rgba(37,99,235,.06));
+      color:#0b1b4a;
+    }
+
+    .hero-aside{
+      padding: 18px;
+      border-left: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f7f9ff);
+      height: 100%;
+    }
+    @media (max-width: 880px){
+      .hero-aside{ border-left:0; border-top:1px solid var(--line); }
+    }
+    .stat{
+      display:grid;
+      gap:10px;
+    }
+    .statItem{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background:#fff;
+    }
+    .statItem b{ display:block; font-size: 13px; }
+    .statItem span{ display:block; margin-top:4px; color:var(--muted); font-size: 12.8px; }
+    .tiny{
+      font-size:12.5px;
+      color: var(--muted);
+      margin: 10px 0 0;
+    }
+
+    /* Sections */
+    .section{ display:none; margin-top: 18px; }
+    .section.show{ display:block; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width: 880px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .appHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 8px;
+    }
+    .appName{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      min-width:0;
+    }
+    .icon{
+      width:52px;height:52px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background:#f3f4f6;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .icon img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .title h2{ margin:0; font-size: 18px; letter-spacing: -.2px; }
+    .title p{ margin:6px 0 0; color:var(--muted); font-size: 13.8px; }
+
+    .pill{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background:#fafafa;
+      color:#374151;
+      font-weight: 800;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+
+    .lead{
+      margin: 10px 0 12px;
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height:1.6;
+    }
+
+    .links{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .linkBtn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight: 800;
+      font-size: 13.5px;
+      transition:.15s ease;
+    }
+    .linkBtn:hover{ background:#f9fafb; transform: translateY(-1px); }
+    .linkBtn:focus{ outline:none; box-shadow: var(--focus); }
+    .linkBtn i{
+      font-style: normal;
+      width:26px;height:26px;border-radius:10px;
+      display:grid;place-items:center;
+      border:1px solid var(--line);
+      background:#f3f4f6;
+      color:#111827;
+      font-weight: 900;
+    }
+
+    .notice{
+      margin-top: 12px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border:1px dashed rgba(245,158,11,.45);
+      background: rgba(245,158,11,.10);
+      color:#6b4b00;
+      font-size: 13.5px;
+      line-height:1.55;
+    }
+    .notice b{ color:#3f2c00; }
+
+    /* Feature list (office simple) */
+    .list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+    .li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background:#fff;
+    }
+    .dot{
+      width:28px;height:28px;border-radius:10px;
+      display:grid;place-items:center;
+      border:1px solid var(--line);
+      background:#f3f4f6;
+      flex:0 0 auto;
+      margin-top: 1px;
+      font-size: 14px;
+    }
+    .li b{ display:block; font-size: 14px; }
+    .li span{ display:block; margin-top:2px; color:var(--muted); font-size: 13.5px; }
+
+    /* Media: banner + slider */
+    .media{
+      padding: 14px;
+      border:1px solid var(--line);
+      border-radius: 16px;
+      background:#fff;
+    }
+    .banner{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      overflow:hidden;
+      background:#f3f4f6;
+    }
+    .banner img{ width:100%; height:auto; display:block; }
+
+    .slider{
+      margin-top: 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      overflow:hidden;
+      position:relative;
+      background:#f3f4f6;
+    }
+    .stage{
+      display:flex;
+      transition: transform .22s ease;
+      will-change: transform;
+    }
+    .slide{
+      min-width: 100%;
+      cursor: zoom-in;
+      user-select:none;
+      background:#f3f4f6;
+    }
+    .slide img{ width:100%; height:auto; display:block; }
+
+    .navBtn{
+      position:absolute;
+      top:50%;
+      transform: translateY(-50%);
+      width:40px;height:40px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.86);
+      display:grid;place-items:center;
+      cursor:pointer;
+      user-select:none;
+      transition:.15s ease;
+    }
+    .navBtn:hover{ background:#fff; box-shadow: 0 10px 24px rgba(17,24,39,.10); }
+    .prev{ left:10px; }
+    .next{ right:10px; }
+
+    .thumbs{
+      margin-top: 10px;
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-bottom: 2px;
+    }
+    .thumb{
+      width:92px;
+      flex:0 0 auto;
+      border-radius: 12px;
+      border:2px solid transparent;
+      background:#f3f4f6;
+      overflow:hidden;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .thumb.active{ border-color: rgba(37,99,235,.55); }
+    .thumb img{ width:100%; height:60px; object-fit:cover; display:block; }
+
+    .hr{ height:1px; background: var(--line); margin: 16px 0 10px; }
+    .foot{
+      margin-top: 18px;
+      padding-top: 10px;
+      border-top:1px solid var(--line);
+      color: var(--muted);
+      font-size: 12.5px;
+      text-align:center;
+    }
+
+    /* Fullscreen modal */
+    .modal{
+      position:fixed;
+      inset:0;
+      background: rgba(17,24,39,.65);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 999;
+      padding: 18px;
+    }
+    .modal.show{ display:flex; }
+    .modalBox{
+      width:min(980px, 96vw);
+      max-height: 92vh;
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.22);
+      background:#0b1020;
+      position:relative;
+      box-shadow: 0 22px 70px rgba(0,0,0,.35);
+    }
+    .modalImg{
+      width:100%;
+      height:auto;
+      display:block;
+      max-height: 92vh;
+      object-fit: contain;
+      background: rgba(0,0,0,.25);
+    }
+    .modalTop{
+      position:absolute;
+      top:10px; left:10px; right:10px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      pointer-events:none;
+    }
+    .mchip{
+      pointer-events:auto;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 9px 11px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      color: rgba(255,255,255,.92);
+      font-weight: 800;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div class="brand-txt">
+          <b>Productivity Suite</b>
+          <span>Documents • QR Scanner • Image to PDF</span>
+        </div>
+      </div>
+
+      <div class="tabs" role="navigation" aria-label="Tabs">
+        <div class="chip active" data-target="home">Home</div>
+        <div class="chip" data-target="doc">Document</div>
+        <div class="chip" data-target="qr">QR Scanner</div>
+        <div class="chip" data-target="pdf">PDF Tools</div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <!-- HOME -->
+    <section id="home" class="hero section show" aria-label="Home">
+      <div class="hero-inner">
+        <div>
+          <div class="badge">⚡ Modern office • simple • fast</div>
+          <h1>One suite for daily work : documents, QR scanning, and PDF tools.</h1>
+          <p class="sub">
+            A clean and modern set of Android apps for productivity. Open files instantly, scan QR codes securely,
+            and convert or edit PDFs anytime.
+          </p>
+
+          <div class="cta">
+            <a class="btn primary" href="#doc" data-jump="doc">Open Document</a>
+            <a class="btn" href="#qr" data-jump="qr">Open QR Scanner</a>
+            <a class="btn" href="#pdf" data-jump="pdf">Open PDF Tools</a>
+          </div>
+        </div>
+
+        <aside class="hero-aside">
+          <div class="stat">
+            <div class="statItem">
+              <b>Designed for WebView</b>
+              <span>Lightweight HTML5 with smooth navigation.</span>
+            </div>
+            <div class="statItem">
+              <b>Clean office layout</b>
+              <span>Simple cards, clear text, no clutter.</span>
+            </div>
+            <div class="statItem">
+              <b>Fast image preview</b>
+              <span>Slider + fullscreen for screenshots.</span>
+            </div>
+          </div>
+          <p class="tiny">Tip : open Play links externally via WebViewClient (optional).</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- DOCUMENT -->
+    <section id="doc" class="section" aria-label="All Document Reader">
+      <div class="grid">
+        <div class="card">
+          <div class="appHead">
+            <div class="appName">
+              <div class="icon" aria-hidden="true">
+                <img id="docIcon" src="" alt="All Document Icon" referrerpolicy="no-referrer" />
+              </div>
+              <div class="title" style="min-width:0;">
+                <h2>All Document Reader : My PDF</h2>
+                <p>All-in-one reader : PDF, Word, Excel, PPT.</p>
+              </div>
+            </div>
+            <div class="pill">Office files</div>
+          </div>
+
+          <p class="lead">
+            Read and manage all your documents in one app. Smooth performance, clean UI, and offline support.
+          </p>
+
+          <div class="links">
+            <a class="linkBtn" href="https://play.google.com/store/apps/details?id=com.all.document.reader.my.pdf">
+              <i>▶</i> Google Play
+            </a>
+            <a class="linkBtn" href="#home" data-jump="home">
+              <i>↩</i> Home
+            </a>
+          </div>
+
+          <div class="notice">
+            <b>Permission Notice (Android 11+):</b> This app may request <b>MANAGE_EXTERNAL_STORAGE</b> to access and manage
+            your documents. It is used only for file handling.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="media">
+            <div class="banner">
+              <img id="docBanner" src="" alt="Document Reader banner" loading="lazy" referrerpolicy="no-referrer" />
+            </div>
+
+            <div class="slider" id="docSlider" aria-label="Screenshots slider">
+              <div class="navBtn prev" data-nav="prev" aria-label="Previous">‹</div>
+              <div class="navBtn next" data-nav="next" aria-label="Next">›</div>
+
+              <div class="stage" id="docStage">
+                <div class="slide" data-full=""><img alt="Screenshot 1" loading="lazy" referrerpolicy="no-referrer" /></div>
+                <div class="slide" data-full=""><img alt="Screenshot 2" loading="lazy" referrerpolicy="no-referrer" /></div>
+                <div class="slide" data-full=""><img alt="Screenshot 3" loading="lazy" referrerpolicy="no-referrer" /></div>
+                <div class="slide" data-full=""><img alt="Screenshot 4" loading="lazy" referrerpolicy="no-referrer" /></div>
+              </div>
+            </div>
+
+            <div class="thumbs" id="docThumbs" aria-label="Thumbnails">
+              <div class="thumb active" data-idx="0"><img alt="Thumb 1" loading="lazy" referrerpolicy="no-referrer" /></div>
+              <div class="thumb" data-idx="1"><img alt="Thumb 2" loading="lazy" referrerpolicy="no-referrer" /></div>
+              <div class="thumb" data-idx="2"><img alt="Thumb 3" loading="lazy" referrerpolicy="no-referrer" /></div>
+              <div class="thumb" data-idx="3"><img alt="Thumb 4" loading="lazy" referrerpolicy="no-referrer" /></div>
+            </div>
+
+            <div class="hr"></div>
+            <p class="tiny" style="margin:0;">Click any screenshot to view fullscreen.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:16px;">
+        <div class="card">
+          <ul class="list">
+            <li class="li"><div class="dot">📂</div><div><b>All-in-One Manager</b><span>PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, TXT, CSV and more. Auto-scan and organize your files.</span></div></li>
+            <li class="li"><div class="dot">📄</div><div><b>Fast PDF Viewer</b><span>Smooth reading, zoom, scroll, and quick navigation.</span></div></li>
+            <li class="li"><div class="dot">🔎</div><div><b>Smart Search</b><span>Find documents and keywords instantly.</span></div></li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul class="list">
+            <li class="li"><div class="dot">📝</div><div><b>Office Formats</b><span>Open Word, Excel, and PPT with clear rendering.</span></div></li>
+            <li class="li"><div class="dot">🧩</div><div><b>PDF Tools</b><span>Merge, split, extract text/images, and compress files.</span></div></li>
+            <li class="li"><div class="dot">🔒</div><div><b>Offline & Private</b><span>No internet required for reading. Your files stay on your device.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- QR -->
+    <section id="qr" class="section" aria-label="QR Code Reader & Barcode Scanner">
+      <div class="grid">
+        <div class="card">
+          <div class="appHead">
+            <div class="appName">
+              <div class="icon" aria-hidden="true" style="background: rgba(6,182,212,.12);"></div>
+              <div class="title">
+                <h2>QR Code Reader & Barcode Scanner</h2>
+                <p>Fast scanning : secure : offline-ready.</p>
+              </div>
+            </div>
+            <div class="pill">Scan & Create</div>
+          </div>
+
+          <p class="lead">
+            Scan QR and barcodes instantly. Supports gallery scan, history, favorites, and QR generation for Wi-Fi, links, and contacts.
+          </p>
+
+          <div class="links">
+            <a class="linkBtn" href="https://play.google.com/store/apps/details?id=com.simple.app.qrcodeqr.barcode">
+              <i>▶</i> Google Play
+            </a>
+            <a class="linkBtn" href="#home" data-jump="home">
+              <i>↩</i> Home
+            </a>
+          </div>
+
+          <div class="notice" style="border-color: rgba(6,182,212,.45); background: rgba(6,182,212,.10); color:#064e5b;">
+            <b>Privacy:</b> Only camera permission is needed for scanning. Core features work offline.
+          </div>
+        </div>
+
+        <div class="card">
+          <ul class="list">
+            <li class="li"><div class="dot">⚡</div><div><b>Auto Scan</b><span>Point the camera and scan instantly, no extra steps.</span></div></li>
+            <li class="li"><div class="dot">🖼</div><div><b>Scan from Gallery</b><span>Decode QR from photos or screenshots.</span></div></li>
+            <li class="li"><div class="dot">🧾</div><div><b>History & Export</b><span>Save, favorite, and export to .csv or .txt.</span></div></li>
+            <li class="li"><div class="dot">🧩</div><div><b>QR Generator</b><span>Create QR codes for Wi-Fi, links, contacts, phone numbers, etc.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PDF -->
+    <section id="pdf" class="section" aria-label="Image to PDF and Edit PDF">
+      <div class="grid">
+        <div class="card">
+          <div class="appHead">
+            <div class="appName">
+              <div class="icon" aria-hidden="true" style="background: rgba(239,68,68,.10);"></div>
+              <div class="title">
+                <h2>Image to PDF and Edit PDF</h2>
+                <p>Read : annotate : convert : compress.</p>
+              </div>
+            </div>
+            <div class="pill">PDF-centric</div>
+          </div>
+
+          <p class="lead">
+            A compact PDF toolkit for Android. Edit and annotate, extract text/images, merge or split files, and compress PDFs.
+          </p>
+
+          <div class="links">
+            <a class="linkBtn" href="https://play.google.com/store/apps/details?id=pdf.free.pdfreaderfree.reader.pdf.view.lovepdf">
+              <i>▶</i> Google Play
+            </a>
+            <a class="linkBtn" href="#home" data-jump="home">
+              <i>↩</i> Home
+            </a>
+          </div>
+
+          <div class="notice" style="border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.08); color:#6b0f0f;">
+            <b>Free to use:</b> No registration. No hidden fees. Fast and simple PDF handling.
+          </div>
+        </div>
+
+        <div class="card">
+          <ul class="list">
+            <li class="li"><div class="dot">🖍️</div><div><b>Annotate PDF</b><span>Highlight, underline, and add notes quickly.</span></div></li>
+            <li class="li"><div class="dot">📌</div><div><b>Search & Extract</b><span>Find keywords and extract text to TXT.</span></div></li>
+            <li class="li"><div class="dot">🧩</div><div><b>Merge & Split</b><span>Combine PDFs or split big files into parts.</span></div></li>
+            <li class="li"><div class="dot">📉</div><div><b>Compress</b><span>Reduce file size without losing quality.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">© <span id="year"></span> • Office-style UI • HTML5 for Android WebView</div>
+  </main>
+
+  <!-- Fullscreen modal -->
+  <div class="modal" id="imgModal" aria-label="Fullscreen image viewer">
+    <div class="modalBox">
+      <div class="modalTop">
+        <div class="mchip" id="modalTitle">Screenshot</div>
+        <div class="mchip" id="modalClose">✕ Close</div>
+      </div>
+      <img class="modalImg" id="modalImg" src="" alt="Fullscreen screenshot" referrerpolicy="no-referrer" />
+    </div>
+  </div>
+
+  <script>
+    // ====== Images folder (your github) ======
+    const IMG_BASE = "https://snowbird33.github.io/img/";
+
+    // Document Reader images
+    const DOC_ICON   = "Icon12345-new.png";
+    const DOC_BANNER = "1024.jpg";
+    const DOC_SHOTS  = ["1.1.png", "2.png", "3.png", "4.png"];
+
+    // ====== Tabs ======
+    const chips = Array.from(document.querySelectorAll(".chip"));
+    const sections = Array.from(document.querySelectorAll(".section"));
+
+    function show(id){
+      sections.forEach(s => s.classList.toggle("show", s.id === id));
+      chips.forEach(c => c.classList.toggle("active", c.dataset.target === id));
+      if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    chips.forEach(c => c.addEventListener("click", () => show(c.dataset.target)));
+    document.querySelectorAll("[data-jump]").forEach(el => {
+      el.addEventListener("click", (e) => {
+        const id = el.getAttribute("data-jump");
+        if (id){
+          e.preventDefault();
+          show(id);
+        }
+      });
+    });
+
+    const initial = (location.hash || "#home").replace("#","");
+    if (sections.some(s => s.id === initial)) show(initial);
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ====== Inject remote images (Document tab) ======
+    document.getElementById("docIcon").src   = IMG_BASE + DOC_ICON;
+    document.getElementById("docBanner").src = IMG_BASE + DOC_BANNER;
+
+    const slides = Array.from(document.querySelectorAll("#docStage .slide"));
+    const thumbs = Array.from(document.querySelectorAll("#docThumbs .thumb"));
+
+    DOC_SHOTS.forEach((file, i) => {
+      const url = IMG_BASE + file;
+      if (slides[i]) {
+        slides[i].setAttribute("data-full", url);
+        const img = slides[i].querySelector("img");
+        img.src = url;
+      }
+      if (thumbs[i]) {
+        thumbs[i].querySelector("img").src = url;
+      }
+    });
+
+    // ====== Slider ======
+    const stage = document.getElementById("docStage");
+    const slider = document.getElementById("docSlider");
+    let idx = 0;
+
+    function setIdx(n){
+      idx = Math.max(0, Math.min(slides.length - 1, n));
+      stage.style.transform = `translateX(${-idx * 100}%)`;
+      thumbs.forEach(t => t.classList.toggle("active", Number(t.dataset.idx) === idx));
+    }
+
+    slider.querySelector('[data-nav="prev"]').addEventListener("click", () => setIdx(idx - 1));
+    slider.querySelector('[data-nav="next"]').addEventListener("click", () => setIdx(idx + 1));
+    thumbs.forEach(t => t.addEventListener("click", () => setIdx(Number(t.dataset.idx))));
+
+    // ====== Fullscreen modal ======
+    const modal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("modalImg");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalClose = document.getElementById("modalClose");
+
+    function openModal(src, title){
+      modalImg.src = src;
+      modalTitle.textContent = title || "Screenshot";
+      modal.classList.add("show");
+    }
+    function closeModal(){
+      modal.classList.remove("show");
+      modalImg.src = "";
+    }
+
+    slides.forEach((s, i) => {
+      s.addEventListener("click", () => openModal(s.getAttribute("data-full") || "", `Document : Screenshot ${i+1}`));
+    });
+
+    modalClose.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+  </script>
+</body>
+</html>
