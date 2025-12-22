@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Productivity Suite • Documents • QR • PDF</title>
+  <title>Productivity Suite : Documents : QR : PDF</title>
   <meta name="description" content="Modern office-style landing for 3 Android apps: Document Reader, QR Scanner, and Image to PDF." />
 
   <style>
@@ -16,11 +16,8 @@
       --shadow: 0 14px 40px rgba(17,24,39,.10);
       --radius:18px;
 
-      --brand:#2563eb;      /* blue */
-      --brand2:#06b6d4;     /* cyan */
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --danger:#ef4444;
+      --brand:#2563eb;
+      --brand2:#06b6d4;
 
       --chip:#f3f4f6;
       --chipHover:#eef2ff;
@@ -39,11 +36,10 @@
         linear-gradient(180deg, var(--bg), #ffffff);
     }
     a{ color:inherit; text-decoration:none; }
-    button{ font:inherit; }
 
     .wrap{ width:min(1100px, 92vw); margin:0 auto; padding: 18px 0 44px; }
 
-    /* Top bar (office style) */
+    /* Top bar */
     .topbar{
       position: sticky;
       top:0;
@@ -328,7 +324,7 @@
     }
     .notice b{ color:#3f2c00; }
 
-    /* Feature list (office simple) */
+    /* Feature list */
     .list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
     .li{
       display:flex;
@@ -424,7 +420,6 @@
     .thumb.active{ border-color: rgba(37,99,235,.55); }
     .thumb img{ width:100%; height:60px; object-fit:cover; display:block; }
 
-    .hr{ height:1px; background: var(--line); margin: 16px 0 10px; }
     .foot{
       margin-top: 18px;
       padding-top: 10px;
@@ -540,11 +535,11 @@
               <span>Simple cards, clear text, no clutter.</span>
             </div>
             <div class="statItem">
-              <b>Fast image preview</b>
-              <span>Slider + fullscreen for screenshots.</span>
+              <b>Showcase images</b>
+              <span>Slider + fullscreen preview.</span>
             </div>
           </div>
-          <p class="tiny">Tip : open Play links externally via WebViewClient (optional).</p>
+          <p class="tiny">Tip : host images in your folder for best performance.</p>
         </aside>
       </div>
     </section>
@@ -588,30 +583,16 @@
         <div class="card">
           <div class="media">
             <div class="banner">
-              <img id="docBanner" src="" alt="Document Reader banner" loading="lazy" referrerpolicy="no-referrer" />
+              <img id="docBanner" src="" alt="Document banner" loading="lazy" referrerpolicy="no-referrer" />
             </div>
 
-            <div class="slider" id="docSlider" aria-label="Screenshots slider">
+            <div class="slider" id="docSlider" aria-label="Document screenshots slider">
               <div class="navBtn prev" data-nav="prev" aria-label="Previous">‹</div>
               <div class="navBtn next" data-nav="next" aria-label="Next">›</div>
-
-              <div class="stage" id="docStage">
-                <div class="slide" data-full=""><img alt="Screenshot 1" loading="lazy" referrerpolicy="no-referrer" /></div>
-                <div class="slide" data-full=""><img alt="Screenshot 2" loading="lazy" referrerpolicy="no-referrer" /></div>
-                <div class="slide" data-full=""><img alt="Screenshot 3" loading="lazy" referrerpolicy="no-referrer" /></div>
-                <div class="slide" data-full=""><img alt="Screenshot 4" loading="lazy" referrerpolicy="no-referrer" /></div>
-              </div>
+              <div class="stage" id="docStage"></div>
             </div>
 
-            <div class="thumbs" id="docThumbs" aria-label="Thumbnails">
-              <div class="thumb active" data-idx="0"><img alt="Thumb 1" loading="lazy" referrerpolicy="no-referrer" /></div>
-              <div class="thumb" data-idx="1"><img alt="Thumb 2" loading="lazy" referrerpolicy="no-referrer" /></div>
-              <div class="thumb" data-idx="2"><img alt="Thumb 3" loading="lazy" referrerpolicy="no-referrer" /></div>
-              <div class="thumb" data-idx="3"><img alt="Thumb 4" loading="lazy" referrerpolicy="no-referrer" /></div>
-            </div>
-
-            <div class="hr"></div>
-            <p class="tiny" style="margin:0;">Click any screenshot to view fullscreen.</p>
+            <div class="thumbs" id="docThumbs" aria-label="Document thumbnails"></div>
           </div>
         </div>
       </div>
@@ -640,10 +621,12 @@
         <div class="card">
           <div class="appHead">
             <div class="appName">
-              <div class="icon" aria-hidden="true" style="background: rgba(6,182,212,.12);"></div>
+              <div class="icon" aria-hidden="true">
+                <img id="qrIcon" src="" alt="QR Scanner Icon" referrerpolicy="no-referrer" />
+              </div>
               <div class="title">
                 <h2>QR Code Reader & Barcode Scanner</h2>
-                <p>Fast scanning : secure : offline-ready.</p>
+                <p>Fast scanning : accurate : offline-ready.</p>
               </div>
             </div>
             <div class="pill">Scan & Create</div>
@@ -668,11 +651,35 @@
         </div>
 
         <div class="card">
+          <div class="media">
+            <div class="banner">
+              <img id="qrBanner" src="" alt="QR banner" loading="lazy" referrerpolicy="no-referrer" />
+            </div>
+
+            <div class="slider" id="qrSlider" aria-label="QR screenshots slider">
+              <div class="navBtn prev" data-nav="prev" aria-label="Previous">‹</div>
+              <div class="navBtn next" data-nav="next" aria-label="Next">›</div>
+              <div class="stage" id="qrStage"></div>
+            </div>
+
+            <div class="thumbs" id="qrThumbs" aria-label="QR thumbnails"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:16px;">
+        <div class="card">
           <ul class="list">
             <li class="li"><div class="dot">⚡</div><div><b>Auto Scan</b><span>Point the camera and scan instantly, no extra steps.</span></div></li>
             <li class="li"><div class="dot">🖼</div><div><b>Scan from Gallery</b><span>Decode QR from photos or screenshots.</span></div></li>
             <li class="li"><div class="dot">🧾</div><div><b>History & Export</b><span>Save, favorite, and export to .csv or .txt.</span></div></li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul class="list">
             <li class="li"><div class="dot">🧩</div><div><b>QR Generator</b><span>Create QR codes for Wi-Fi, links, contacts, phone numbers, etc.</span></div></li>
+            <li class="li"><div class="dot">🔦</div><div><b>Flashlight & Zoom</b><span>Scan easily in low-light or from a distance.</span></div></li>
+            <li class="li"><div class="dot">💰</div><div><b>Price Scan</b><span>Scan barcodes to view product info and compare prices.</span></div></li>
           </ul>
         </div>
       </div>
@@ -684,7 +691,7 @@
         <div class="card">
           <div class="appHead">
             <div class="appName">
-              <div class="icon" aria-hidden="true" style="background: rgba(239,68,68,.10);"></div>
+              <div class="icon" aria-hidden="true"></div>
               <div class="title">
                 <h2>Image to PDF and Edit PDF</h2>
                 <p>Read : annotate : convert : compress.</p>
@@ -737,15 +744,24 @@
   </div>
 
   <script>
-    // ====== Images folder (your github) ======
+    // ========= IMAGE FOLDER =========
+    // If you host all images here:
     const IMG_BASE = "https://snowbird33.github.io/img/";
 
-    // Document Reader images
+    // Build URL safely (supports spaces like "icon QR-01 3.png")
+    const imgUrl = (file) => IMG_BASE + encodeURIComponent(file);
+
+    // ========= DOCUMENT (your existing images) =========
     const DOC_ICON   = "Icon12345-new.png";
     const DOC_BANNER = "1024.jpg";
     const DOC_SHOTS  = ["1.1.png", "2.png", "3.png", "4.png"];
 
-    // ====== Tabs ======
+    // ========= QR (your new images) =========
+    const QR_ICON   = "icon QR-01 3.png";
+    const QR_BANNER = "31ee356f-071b-4012-a199-1a6bdc175023.jfif";
+    const QR_SHOTS  = ["1.webp", "2.webp", "3.webp", "4.webp", "5.webp"];
+
+    // ========= Tabs =========
     const chips = Array.from(document.querySelectorAll(".chip"));
     const sections = Array.from(document.querySelectorAll(".section"));
 
@@ -771,41 +787,7 @@
     if (sections.some(s => s.id === initial)) show(initial);
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // ====== Inject remote images (Document tab) ======
-    document.getElementById("docIcon").src   = IMG_BASE + DOC_ICON;
-    document.getElementById("docBanner").src = IMG_BASE + DOC_BANNER;
-
-    const slides = Array.from(document.querySelectorAll("#docStage .slide"));
-    const thumbs = Array.from(document.querySelectorAll("#docThumbs .thumb"));
-
-    DOC_SHOTS.forEach((file, i) => {
-      const url = IMG_BASE + file;
-      if (slides[i]) {
-        slides[i].setAttribute("data-full", url);
-        const img = slides[i].querySelector("img");
-        img.src = url;
-      }
-      if (thumbs[i]) {
-        thumbs[i].querySelector("img").src = url;
-      }
-    });
-
-    // ====== Slider ======
-    const stage = document.getElementById("docStage");
-    const slider = document.getElementById("docSlider");
-    let idx = 0;
-
-    function setIdx(n){
-      idx = Math.max(0, Math.min(slides.length - 1, n));
-      stage.style.transform = `translateX(${-idx * 100}%)`;
-      thumbs.forEach(t => t.classList.toggle("active", Number(t.dataset.idx) === idx));
-    }
-
-    slider.querySelector('[data-nav="prev"]').addEventListener("click", () => setIdx(idx - 1));
-    slider.querySelector('[data-nav="next"]').addEventListener("click", () => setIdx(idx + 1));
-    thumbs.forEach(t => t.addEventListener("click", () => setIdx(Number(t.dataset.idx))));
-
-    // ====== Fullscreen modal ======
+    // ========= Modal =========
     const modal = document.getElementById("imgModal");
     const modalImg = document.getElementById("modalImg");
     const modalTitle = document.getElementById("modalTitle");
@@ -820,14 +802,93 @@
       modal.classList.remove("show");
       modalImg.src = "";
     }
-
-    slides.forEach((s, i) => {
-      s.addEventListener("click", () => openModal(s.getAttribute("data-full") || "", `Document : Screenshot ${i+1}`));
-    });
-
     modalClose.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+    // ========= Slider Builder =========
+    function buildSlider({ stageId, thumbsId, sliderId, shots, titlePrefix }){
+      const stage = document.getElementById(stageId);
+      const thumbs = document.getElementById(thumbsId);
+      const slider = document.getElementById(sliderId);
+
+      stage.innerHTML = "";
+      thumbs.innerHTML = "";
+
+      let idx = 0;
+
+      shots.forEach((file, i) => {
+        const url = imgUrl(file);
+
+        // Slide
+        const slide = document.createElement("div");
+        slide.className = "slide";
+        slide.dataset.full = url;
+
+        const img = document.createElement("img");
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+        img.alt = `${titlePrefix} Screenshot ${i+1}`;
+        img.src = url;
+
+        slide.appendChild(img);
+        stage.appendChild(slide);
+
+        slide.addEventListener("click", () => openModal(url, `${titlePrefix} : Screenshot ${i+1}`));
+
+        // Thumb
+        const th = document.createElement("div");
+        th.className = "thumb" + (i === 0 ? " active" : "");
+        th.dataset.idx = String(i);
+
+        const thImg = document.createElement("img");
+        thImg.loading = "lazy";
+        thImg.referrerPolicy = "no-referrer";
+        thImg.alt = `${titlePrefix} Thumb ${i+1}`;
+        thImg.src = url;
+
+        th.appendChild(thImg);
+        thumbs.appendChild(th);
+
+        th.addEventListener("click", () => setIdx(i));
+      });
+
+      function setIdx(n){
+        const max = shots.length - 1;
+        idx = Math.max(0, Math.min(max, n));
+        stage.style.transform = `translateX(${-idx * 100}%)`;
+        Array.from(thumbs.querySelectorAll(".thumb")).forEach(t =>
+          t.classList.toggle("active", Number(t.dataset.idx) === idx)
+        );
+      }
+
+      slider.querySelector('[data-nav="prev"]').addEventListener("click", () => setIdx(idx - 1));
+      slider.querySelector('[data-nav="next"]').addEventListener("click", () => setIdx(idx + 1));
+    }
+
+    // ========= Inject icons + banners =========
+    document.getElementById("docIcon").src   = imgUrl(DOC_ICON);
+    document.getElementById("docBanner").src = imgUrl(DOC_BANNER);
+
+    document.getElementById("qrIcon").src    = imgUrl(QR_ICON);
+    document.getElementById("qrBanner").src  = imgUrl(QR_BANNER);
+
+    // ========= Build sliders =========
+    buildSlider({
+      stageId: "docStage",
+      thumbsId: "docThumbs",
+      sliderId: "docSlider",
+      shots: DOC_SHOTS,
+      titlePrefix: "Document"
+    });
+
+    buildSlider({
+      stageId: "qrStage",
+      thumbsId: "qrThumbs",
+      sliderId: "qrSlider",
+      shots: QR_SHOTS,
+      titlePrefix: "QR Scanner"
+    });
   </script>
 </body>
 </html>
