@@ -1,28 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1220" />
+  <meta name="theme-color" content="#0b5fff" />
   <title>Productivity Suite: Documents + QR + PDF</title>
   <style>
     :root{
-      --bg: #0b1220;
-      --panel: rgba(255,255,255,.06);
-      --panel2: rgba(255,255,255,.09);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
-      --muted2: rgba(255,255,255,.56);
-      --line: rgba(255,255,255,.14);
-      --shadow: 0 20px 60px rgba(0,0,0,.35);
-      --shadow2: 0 10px 30px rgba(0,0,0,.30);
+      --bg: #f6f8fc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --muted2:#64748b;
+      --line: rgba(2, 6, 23, .08);
+      --shadow: 0 16px 40px rgba(2, 6, 23, .08);
+      --shadow2: 0 8px 18px rgba(2, 6, 23, .06);
       --radius: 18px;
-      --radius2: 26px;
-      --accent: #6ee7ff;
-      --accent2: #a78bfa;
-      --ok: #34d399;
-      --warn: #fbbf24;
-      --danger: #fb7185;
+      --radius2: 24px;
+      --primary:#0b5fff;
+      --primary2:#00a3ff;
+      --chip:#eff6ff;
       --max: 1120px;
       --pad: 18px;
       --pad2: 26px;
@@ -36,245 +33,168 @@
       font-family: var(--font);
       color: var(--text);
       background:
-        radial-gradient(1200px 600px at 15% -10%, rgba(110,231,255,.22), transparent 55%),
-        radial-gradient(1100px 600px at 85% 0%, rgba(167,139,250,.22), transparent 55%),
-        radial-gradient(900px 700px at 50% 110%, rgba(52,211,153,.14), transparent 50%),
-        linear-gradient(180deg, #070b14 0%, var(--bg) 55%, #070b14 100%);
+        radial-gradient(1200px 500px at 10% -20%, rgba(11,95,255,.18), transparent 55%),
+        radial-gradient(900px 500px at 90% 0%, rgba(0,163,255,.16), transparent 55%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 40%, #ffffff 100%);
+      overflow-x:hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      overflow-x:hidden;
     }
 
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:var(--max); margin:0 auto; padding: 0 var(--pad)}
-    .safe{padding-bottom: max(24px, env(safe-area-inset-bottom));}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+    .safe{padding-bottom:max(24px, env(safe-area-inset-bottom));}
 
     /* Top bar */
     .topbar{
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      background: linear-gradient(180deg, rgba(11,18,32,.88) 0%, rgba(11,18,32,.64) 100%);
+      position: sticky; top:0; z-index: 50;
+      background: rgba(255,255,255,.82);
       border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     .topbar-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding: 12px var(--pad);
-      max-width: var(--max);
-      margin: 0 auto;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding: 12px var(--pad);
+      max-width:var(--max); margin:0 auto;
     }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width: 0;
+    .brand{display:flex; align-items:center; gap:10px; min-width:0}
+    .logo{
+      width:34px;height:34px;border-radius:12px;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      box-shadow: 0 10px 18px rgba(11,95,255,.25);
+      position: relative; overflow:hidden;
     }
-    .mark{
-      width:36px; height:36px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(110,231,255,.9), rgba(167,139,250,.85));
-      box-shadow: var(--shadow2);
-      position: relative;
-      overflow:hidden;
-    }
-    .mark:before{
-      content:"";
-      position:absolute; inset:-35%;
+    .logo:before{
+      content:""; position:absolute; inset:-40%;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.75), transparent 55%);
-      transform: rotate(18deg);
+      transform: rotate(12deg);
     }
-    .brand-title{
-      display:flex;
-      flex-direction:column;
-      line-height:1.05;
-      min-width:0;
-    }
-    .brand-title b{
-      font-size: 14px;
-      letter-spacing:.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brand-title span{
-      font-size: 12px;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .nav{
-      display:flex; align-items:center; gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+    .brand-title{display:flex; flex-direction:column; line-height:1.15; min-width:0}
+    .brand-title b{font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .brand-title span{font-size:12px;color:var(--muted2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+    .nav{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end}
     .chip{
-      font-size: 12px;
+      font-size:12px;
       padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      border-radius:999px;
+      border:1px solid rgba(11,95,255,.14);
+      background: var(--chip);
+      color: #0b3aa8;
+      transition: transform .12s ease, box-shadow .12s ease;
     }
-    .chip:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.07);
-      border-color: rgba(255,255,255,.22);
-      color: rgba(255,255,255,.85);
-    }
+    .chip:hover{transform: translateY(-1px); box-shadow: 0 8px 18px rgba(11,95,255,.12)}
 
     /* Hero */
-    .hero{padding: 40px 0 16px}
+    .hero{padding: 34px 0 14px}
     .hero-grid{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 18px;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
       align-items: stretch;
     }
+
     .hero-card{
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      background: var(--card);
+      border:1px solid var(--line);
       border-radius: var(--radius2);
       box-shadow: var(--shadow);
       overflow:hidden;
-      position:relative;
+      position: relative;
     }
     .hero-card .inner{padding: 26px}
-    .kicker{
+    .badge{
       display:inline-flex; align-items:center; gap:8px;
-      font-size:12px;
-      color: var(--muted);
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
       padding: 8px 10px;
-      border-radius: 999px;
+      font-size:12px;
+      color: #0b3aa8;
+      background: linear-gradient(180deg, rgba(11,95,255,.10), rgba(11,95,255,.06));
+      border:1px solid rgba(11,95,255,.16);
+      border-radius:999px;
     }
-    .dot{
-      width:8px; height:8px; border-radius:999px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      box-shadow: 0 0 0 6px rgba(110,231,255,.08);
-    }
+    .dot{width:8px;height:8px;border-radius:999px;background: var(--primary)}
     h1{
       margin: 14px 0 10px;
-      font-size: clamp(26px, 4.2vw, 44px);
+      font-size: clamp(26px, 4.4vw, 44px);
       line-height: 1.08;
-      letter-spacing: -.6px;
+      letter-spacing: -.7px;
     }
     .lead{
       margin: 0 0 18px;
       color: var(--muted);
       font-size: 14px;
-      line-height: 1.7;
-      max-width: 62ch;
+      line-height: 1.75;
+      max-width: 64ch;
     }
-    .cta-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top: 8px;
-    }
+    .cta-row{display:flex; flex-wrap:wrap; gap:10px; margin-top: 6px}
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
       padding: 12px 14px;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.88);
+      background: #ffffff;
+      color: var(--text);
       font-weight: 700;
       font-size: 13px;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      box-shadow: 0 10px 18px rgba(2,6,23,.06);
+      transition: transform .12s ease, box-shadow .12s ease;
       user-select:none;
     }
-    .btn:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.08);
-      border-color: rgba(255,255,255,.22);
-    }
+    .btn:hover{transform: translateY(-1px); box-shadow: 0 16px 28px rgba(2,6,23,.10)}
     .btn.primary{
-      border-color: rgba(110,231,255,.32);
-      background: linear-gradient(135deg, rgba(110,231,255,.18), rgba(167,139,250,.16));
+      border-color: rgba(11,95,255,.22);
+      background: linear-gradient(135deg, rgba(11,95,255,.10), rgba(0,163,255,.10));
     }
-    .btn .arrow{
-      width: 18px; height: 18px;
-      border-radius: 8px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.14);
+    .arrow{
+      width: 18px; height: 18px; border-radius: 8px;
+      display:grid; place-items:center;
+      background: rgba(11,95,255,.12);
+      color: #0b3aa8;
       font-size: 12px;
     }
 
-    .hero-side{
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
+    .hero-side{display:flex; flex-direction:column; gap: 12px}
     .mini{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 14px;
       display:flex;
       gap: 12px;
       align-items:center;
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      transition: transform .15s ease, background .15s ease;
+      transition: transform .12s ease, box-shadow .12s ease;
     }
-    .mini:hover{transform: translateY(-1px); background: rgba(255,255,255,.06);}
+    .mini:hover{transform: translateY(-1px); box-shadow: var(--shadow)}
     .app-ico{
-      width: 48px; height: 48px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
+      width:48px;height:48px;border-radius: 14px;
+      border: 1px solid rgba(2,6,23,.10);
+      background: #fff;
       overflow:hidden;
       flex: 0 0 auto;
     }
-    .app-ico img{width:100%; height:100%; object-fit: cover; display:block}
+    .app-ico img{width:100%; height:100%; object-fit:cover; display:block}
     .mini .meta{min-width:0}
-    .mini .meta b{
-      display:block;
-      font-size: 13px;
-      letter-spacing:.1px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .mini .meta span{
-      display:block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .mini .meta b{display:block; font-size: 13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .mini .meta span{display:block; font-size: 12px; color: var(--muted2); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
     .pill{
       margin-left:auto;
-      font-size: 11px;
-      color: rgba(255,255,255,.82);
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.05);
       padding: 7px 10px;
       border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0b3aa8;
+      background: rgba(11,95,255,.10);
+      border: 1px solid rgba(11,95,255,.16);
       white-space:nowrap;
     }
 
     /* Sections */
-    section{padding: 18px 0}
+    section{padding: 16px 0}
     .section-head{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap: 14px;
-      margin: 22px 0 12px;
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap: 14px; margin: 20px 0 12px;
     }
     .section-head h2{
       margin:0;
@@ -285,35 +205,23 @@
       margin:0;
       color: var(--muted);
       font-size: 13px;
-      line-height:1.6;
-      max-width: 64ch;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
+      line-height: 1.7;
+      max-width: 70ch;
     }
 
     .card{
+      background: var(--card);
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border-radius: var(--radius2);
       box-shadow: var(--shadow2);
       overflow:hidden;
     }
     .card-inner{padding: var(--pad2)}
     .card-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 14px;
-      margin-bottom: 12px;
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap: 14px; margin-bottom: 12px;
     }
-    .title-row{
-      display:flex; align-items:center; gap: 12px;
-      min-width:0;
-    }
+    .title-row{display:flex; align-items:center; gap: 12px; min-width:0}
     .title-row h3{
       margin:0;
       font-size: 16px;
@@ -326,8 +234,8 @@
       margin: 6px 0 0;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.7;
-      max-width: 78ch;
+      line-height: 1.8;
+      max-width: 80ch;
     }
 
     .feature-grid{
@@ -337,41 +245,20 @@
       margin-top: 12px;
     }
     .feat{
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(2,6,23,.08);
+      background: linear-gradient(180deg, rgba(11,95,255,.04), rgba(2,6,23,.02));
       border-radius: 16px;
       padding: 12px;
-      min-height: 76px;
+      min-height: 78px;
     }
-    .feat b{
-      display:block;
-      font-size: 12px;
-      letter-spacing:.1px;
-      margin-bottom: 4px;
-    }
-    .feat span{
-      display:block;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.55;
-    }
+    .feat b{display:block; font-size: 12.5px; margin-bottom: 4px}
+    .feat span{display:block; color: var(--muted2); font-size: 12px; line-height: 1.6}
 
-    /* Screenshots */
-    .shots{
-      margin-top: 14px;
-      border-top: 1px solid var(--line);
-      padding-top: 14px;
-    }
-    .shots h4{
-      margin:0 0 10px;
-      font-size: 13px;
-      color: rgba(255,255,255,.88);
-      letter-spacing:.1px;
-    }
+    /* Screenshot strip */
+    .shots{margin-top: 14px; border-top: 1px solid rgba(2,6,23,.08); padding-top: 14px}
+    .shots h4{margin:0 0 10px; font-size: 13px; color: #0f172a}
     .strip{
-      display:flex;
-      gap: 10px;
-      overflow:auto;
+      display:flex; gap: 10px; overflow:auto;
       padding-bottom: 6px;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
@@ -382,65 +269,45 @@
       width: 240px;
       border-radius: 16px;
       overflow:hidden;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(2,6,23,.10);
+      background: #fff;
+      box-shadow: 0 10px 18px rgba(2,6,23,.06);
     }
-    .shot img{
-      width: 100%;
-      height: 100%;
-      display:block;
-      object-fit: cover;
-    }
-    .shot.wide{width: 340px}
+    .shot img{width:100%; height:100%; object-fit:cover; display:block}
+    .shot.wide{width: 360px}
     .shot.tall{width: 220px}
 
-    /* Notes */
+    /* Note */
     .note{
-      display:flex;
-      gap: 12px;
-      align-items:flex-start;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
+      display:flex; gap: 12px; align-items:flex-start;
+      border: 1px solid rgba(11,95,255,.16);
+      background: rgba(11,95,255,.06);
       border-radius: 18px;
       padding: 14px;
       margin-top: 14px;
     }
-    .badge{
+    .note .i{
+      width: 34px; height: 34px; border-radius: 12px;
+      display:grid; place-items:center;
+      background: rgba(11,95,255,.14);
+      color: #0b3aa8;
+      font-weight: 900;
       flex:0 0 auto;
-      width: 34px; height: 34px;
-      border-radius: 12px;
-      display:grid;
-      place-items:center;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      font-weight: 800;
-      color: rgba(255,255,255,.9);
     }
-    .note p{
-      margin: 0;
-      color: var(--muted);
-      font-size: 12.5px;
-      line-height: 1.7;
-    }
+    .note p{margin:0; color: var(--muted); font-size: 12.5px; line-height: 1.75}
 
     /* Footer */
     footer{
-      padding: 26px 0 34px;
-      border-top: 1px solid var(--line);
+      padding: 24px 0 34px;
+      border-top: 1px solid rgba(2,6,23,.08);
       margin-top: 18px;
       color: var(--muted2);
       font-size: 12px;
     }
-    .foot{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .mutelink{
-      color: var(--muted);
-      border-bottom: 1px dashed rgba(255,255,255,.22);
+    .foot{display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap}
+    .link{
+      color:#0b3aa8;
+      border-bottom: 1px dashed rgba(11,95,255,.35);
     }
 
     /* Responsive */
@@ -450,10 +317,8 @@
       .mini{min-width: 280px; flex: 0 0 auto}
       .feature-grid{grid-template-columns: 1fr}
       .shot{width: 210px}
-      .shot.wide{width: 300px}
+      .shot.wide{width: 320px}
     }
-
-    /* Reduce motion */
     @media (prefers-reduced-motion: reduce){
       *{scroll-behavior:auto !important; transition:none !important}
     }
@@ -461,105 +326,89 @@
 </head>
 
 <body>
-  <!-- Top bar -->
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <div class="mark" aria-hidden="true"></div>
+        <div class="logo" aria-hidden="true"></div>
         <div class="brand-title">
-          <b>Productivity Apps</b>
+          <b>Productivity Suite</b>
           <span>Documents • QR • PDF Tools</span>
         </div>
       </div>
-      <nav class="nav" aria-label="Page navigation">
+      <nav class="nav" aria-label="Điều hướng">
         <a class="chip" href="#apps">Apps</a>
-        <a class="chip" href="#document">Document Reader</a>
-        <a class="chip" href="#qr">QR Scanner</a>
-        <a class="chip" href="#pdf">Image to PDF</a>
+        <a class="chip" href="#document">Document</a>
+        <a class="chip" href="#qr">QR</a>
+        <a class="chip" href="#pdf">PDF</a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero -->
   <main class="wrap safe">
-    <div class="hero">
+    <!-- HERO -->
+    <div class="hero" id="apps">
       <div class="hero-grid">
         <div class="hero-card">
           <div class="inner">
-            <div class="kicker"><span class="dot" aria-hidden="true"></span> Modern office-style landing page for WebView</div>
-            <h1>One simple hub for <span style="color:var(--accent)">documents</span>, <span style="color:var(--accent2)">QR</span>, and <span style="color:var(--ok)">PDF</span> productivity.</h1>
+            <div class="badge"><span class="dot"></span> Giao diện văn phòng hiện đại, tối giản, dễ đọc trong WebView</div>
+            <h1>3 ứng dụng, 1 “hub” gọn gàng: <span style="color:var(--primary)">Docs</span> • <span style="color:#0ea5e9">QR</span> • <span style="color:#16a34a">PDF</span></h1>
             <p class="lead">
-              Unlock the power of productivity with three lightweight Android apps:
-              manage office files, scan & generate QR/barcodes, and convert images to PDF while editing PDFs on the go.
-              Clean UI, fast performance, and privacy-friendly workflows.
+              Một landing page sạch, hiện đại để đặt trong WebView: giới thiệu trọn bộ ứng dụng văn phòng.
+              Tối ưu cho mobile, chữ rõ, card gọn, ảnh scroll mượt.
             </p>
-
             <div class="cta-row">
-              <a class="btn primary" href="#apps">
-                Explore apps <span class="arrow">→</span>
-              </a>
-              <a class="btn" href="https://play.google.com/store/apps/details?id=com.all.document.reader.my.pdf">
-                Document Reader <span class="arrow">↗</span>
-              </a>
-              <a class="btn" href="https://play.google.com/store/apps/details?id=com.simple.app.qrcodeqr.barcode">
-                QR Scanner <span class="arrow">↗</span>
-              </a>
-              <a class="btn" href="https://play.google.com/store/apps/details?id=pdf.free.pdfreaderfree.reader.pdf.view.lovepdf">
-                Image to PDF <span class="arrow">↗</span>
-              </a>
+              <a class="btn primary" href="#document">Xem bộ tính năng <span class="arrow">→</span></a>
+              <a class="btn" href="https://play.google.com/store/apps/details?id=com.all.document.reader.my.pdf">Google Play <span class="arrow">↗</span></a>
             </div>
 
-            <div class="note" style="margin-top:16px">
-              <div class="badge">i</div>
+            <div class="note">
+              <div class="i">i</div>
               <p>
-                Tip: This page is designed to look great inside Android WebView (mobile-first, smooth scrolling, safe-area padding).
-                Replace any image URLs easily by updating the <b>IMG_BASE</b> constant in the script below.
+                Bạn chỉ cần upload ảnh vào <b>https://snowbird33.github.io/img/</b> và đặt đúng tên file.
+                Trang sẽ tự load qua thuộc tính <b>data-img</b> (dễ thay đổi).
               </p>
             </div>
           </div>
         </div>
 
-        <!-- Side mini cards -->
-        <div class="hero-side" id="apps">
+        <!-- RIGHT SIDE mini cards -->
+        <div class="hero-side">
           <a class="mini" href="#document">
             <div class="app-ico"><img data-img="Icon12345-new.png" alt="Document Reader icon"></div>
             <div class="meta">
-              <b>My Document Reader</b>
-              <span>PDF, DOCX, XLSX, PPTX, TXT + tools</span>
+              <b>All Document Reader</b>
+              <span>PDF • Word • Excel • PPT + Tools</span>
             </div>
             <div class="pill">All-in-One</div>
           </a>
 
           <a class="mini" href="#qr">
-            <div class="app-ico"><img data-img="icon%20QR-01%203.png" alt="QR & Barcode Scanner icon"></div>
+            <div class="app-ico"><img data-img="icon%20QR-01%203.png" alt="QR & Barcode icon"></div>
             <div class="meta">
-              <b>All QR Scanner & Generator</b>
-              <span>Scan, create, history, batch, gallery</span>
+              <b>QR & Barcode Scanner</b>
+              <span>Scan nhanh • Tạo mã • Lịch sử</span>
             </div>
-            <div class="pill">Fast Scan</div>
+            <div class="pill">Fast</div>
           </a>
 
           <a class="mini" href="#pdf">
-            <div class="app-ico"><img data-img="512x512.png" alt="Image to PDF icon"></div>
+            <div class="app-ico"><img data-img="512x512.png" alt="PDF toolkit icon"></div>
             <div class="meta">
-              <b>Image to PDF and Edit PDF</b>
-              <span>Convert, edit, merge, split, compress</span>
+              <b>Image to PDF</b>
+              <span>Convert • Edit • Merge • Split</span>
             </div>
-            <div class="pill">PDF Pro</div>
+            <div class="pill">Pro</div>
           </a>
         </div>
       </div>
     </div>
 
-    <!-- Document Reader -->
+    <!-- DOCUMENT -->
     <section id="document">
       <div class="section-head">
         <div>
-          <h2>My Document Reader: Read, Edit & Scan Office Files</h2>
-          <p>
-            Your all-in-one solution for reading, editing, and scanning documents.
-            From PDFs and text files to DOCX, XLSX, and PPTX: everything in one smart, intuitive app.
-          </p>
+          <h2>Document Reader: đọc & quản lý tài liệu văn phòng</h2>
+          <p>Trải nghiệm “office-style” gọn gàng: đọc file nhanh, tìm kiếm, sắp xếp và chia sẻ dễ dàng.</p>
         </div>
       </div>
 
@@ -568,50 +417,33 @@
           <div class="card-top">
             <div class="title-row">
               <div class="app-ico" style="width:54px;height:54px;border-radius:16px">
-                <img data-img="Icon12345-new.png" alt="My Document Reader icon">
+                <img data-img="Icon12345-new.png" alt="Document Reader icon">
               </div>
               <div style="min-width:0">
                 <h3>All Document Reader & Editor</h3>
                 <p class="sub">
-                  No more switching between apps. View, organize, search, and share your documents with a smooth, modern experience.
-                  Works offline: your files stay private.
+                  Đọc PDF/DOCX/XLSX/PPTX/TXT, quản lý file thông minh, tìm nhanh theo tên và thư mục.
+                  Giao diện sạch, dễ nhìn, phù hợp kiểu “văn phòng”.
                 </p>
               </div>
             </div>
-            <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.all.document.reader.my.pdf">Get on Google Play <span class="arrow">↗</span></a>
+            <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.all.document.reader.my.pdf">Mở trên Google Play <span class="arrow">↗</span></a>
           </div>
 
           <div class="feature-grid">
-            <div class="feat">
-              <b>All Formats Support</b>
-              <span>PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, TXT, CSV and more.</span>
-            </div>
-            <div class="feat">
-              <b>Smart File Manager</b>
-              <span>Unified dashboard, auto-scan device, quick search & organize.</span>
-            </div>
-            <div class="feat">
-              <b>Advanced Tools</b>
-              <span>Highlight, merge/split, extract text/images, compress, edit metadata.</span>
-            </div>
-          </div>
-
-          <div class="note">
-            <div class="badge" style="color:rgba(255,255,255,.92)">🔐</div>
-            <p>
-              <b>Permission notice:</b> To read and edit files on Android 11+, users may need to grant
-              <b>MANAGE_EXTERNAL_STORAGE</b>. This access is used only to manage documents on the device.
-            </p>
+            <div class="feat"><b>Hỗ trợ nhiều định dạng</b><span>PDF, Word, Excel, PPT, TXT…</span></div>
+            <div class="feat"><b>Tìm kiếm & sắp xếp nhanh</b><span>Quét file trên máy, lọc theo loại, recent/favorite.</span></div>
+            <div class="feat"><b>Công cụ PDF</b><span>Highlight/annotate, quản lý trang, tối ưu file.</span></div>
           </div>
 
           <div class="shots">
             <h4>Screenshots</h4>
-            <div class="strip" aria-label="Document Reader screenshots">
-              <div class="shot wide"><img data-img="1024.jpg" alt="Document Reader banner"></div>
-              <div class="shot"><img data-img="1.1.png" alt="Document Reader screenshot 1"></div>
-              <div class="shot"><img data-img="2.png" alt="Document Reader screenshot 2"></div>
-              <div class="shot"><img data-img="3.png" alt="Document Reader screenshot 3"></div>
-              <div class="shot"><img data-img="4.png" alt="Document Reader screenshot 4"></div>
+            <div class="strip">
+              <div class="shot wide"><img data-img="1024.jpg" alt="Document banner"></div>
+              <div class="shot"><img data-img="1.1.png" alt="Doc shot 1"></div>
+              <div class="shot"><img data-img="2.png" alt="Doc shot 2"></div>
+              <div class="shot"><img data-img="3.png" alt="Doc shot 3"></div>
+              <div class="shot"><img data-img="4.png" alt="Doc shot 4"></div>
             </div>
           </div>
         </div>
@@ -622,11 +454,8 @@
     <section id="qr">
       <div class="section-head">
         <div>
-          <h2>All QR Scanner & QR Generator: QR + Barcode in Seconds</h2>
-          <p>
-            The fastest, easiest, and most feature-rich QR & barcode scanner for Android.
-            Scan Wi-Fi, URL, text, coupons, ISBN, and more: online or offline.
-          </p>
+          <h2>QR Scanner: quét & tạo mã QR/Barcode cực nhanh</h2>
+          <p>Thiết kế đơn giản, thao tác 1 chạm: quét camera, quét từ ảnh, lưu lịch sử, chia sẻ tức thì.</p>
         </div>
       </div>
 
@@ -635,58 +464,45 @@
           <div class="card-top">
             <div class="title-row">
               <div class="app-ico" style="width:54px;height:54px;border-radius:16px">
-                <img data-img="icon%20QR-01%203.png" alt="QR & Barcode Scanner icon">
+                <img data-img="icon%20QR-01%203.png" alt="QR icon">
               </div>
               <div style="min-width:0">
                 <h3>QR Code Reader & Barcode Scanner</h3>
                 <p class="sub">
-                  Point your camera: it scans instantly. Create QR codes for Wi-Fi, contacts, text, links, and share effortlessly.
-                  Supports scan from gallery, batch scan, flashlight, zoom, and export history.
+                  Quét nhanh mọi loại mã: URL, Wi-Fi, text, contact, product… và tạo QR cho liên kết, nội dung.
                 </p>
               </div>
             </div>
-            <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.simple.app.qrcodeqr.barcode">Get on Google Play <span class="arrow">↗</span></a>
+            <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.simple.app.qrcodeqr.barcode">Mở trên Google Play <span class="arrow">↗</span></a>
           </div>
 
           <div class="feature-grid">
-            <div class="feat">
-              <b>Scan Everything</b>
-              <span>QR + barcodes: URL, Wi-Fi, text, email, ISBN, location, events, more.</span>
-            </div>
-            <div class="feat">
-              <b>Price & Product Scan</b>
-              <span>Check product info, compare prices, verify origins, save money.</span>
-            </div>
-            <div class="feat">
-              <b>Privacy-Friendly</b>
-              <span>Designed to work offline; only camera permission is needed for scanning.</span>
-            </div>
+            <div class="feat"><b>Scan siêu nhanh</b><span>Auto focus, flashlight, zoom, scan từ gallery.</span></div>
+            <div class="feat"><b>Tạo mã dễ</b><span>QR cho link, text, Wi-Fi, contact…</span></div>
+            <div class="feat"><b>Lịch sử rõ ràng</b><span>Lưu & export lịch sử, chia sẻ 1 chạm.</span></div>
           </div>
 
           <div class="shots">
             <h4>Screenshots</h4>
-            <div class="strip" aria-label="QR app screenshots">
-              <div class="shot wide"><img data-img="31ee356f-071b-4012-a199-1a6bdc175023.jfif" alt="QR app banner"></div>
-              <div class="shot tall"><img data-img="1.webp" alt="QR screenshot 1"></div>
-              <div class="shot tall"><img data-img="2.webp" alt="QR screenshot 2"></div>
-              <div class="shot tall"><img data-img="3.webp" alt="QR screenshot 3"></div>
-              <div class="shot tall"><img data-img="4.webp" alt="QR screenshot 4"></div>
-              <div class="shot tall"><img data-img="5.webp" alt="QR screenshot 5"></div>
+            <div class="strip">
+              <div class="shot wide"><img data-img="31ee356f-071b-4012-a199-1a6bdc175023.jfif" alt="QR banner"></div>
+              <div class="shot tall"><img data-img="1.webp" alt="QR shot 1"></div>
+              <div class="shot tall"><img data-img="2.webp" alt="QR shot 2"></div>
+              <div class="shot tall"><img data-img="3.webp" alt="QR shot 3"></div>
+              <div class="shot tall"><img data-img="4.webp" alt="QR shot 4"></div>
+              <div class="shot tall"><img data-img="5.webp" alt="QR shot 5"></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Image to PDF -->
+    <!-- PDF -->
     <section id="pdf">
       <div class="section-head">
         <div>
-          <h2>Image to PDF and Edit PDF: Convert, Read & Edit PDFs</h2>
-          <p>
-            A compact yet powerful PDF toolkit: convert images to PDF, annotate, merge/split, extract content,
-            compress files, and manage PDFs with fast performance.
-          </p>
+          <h2>Image to PDF: chuyển ảnh sang PDF + chỉnh sửa PDF</h2>
+          <p>Workflow văn phòng: scan/ảnh → PDF, chỉnh sửa, gộp/tách, nén nhẹ file để gửi nhanh.</p>
         </div>
       </div>
 
@@ -695,92 +511,70 @@
           <div class="card-top">
             <div class="title-row">
               <div class="app-ico" style="width:54px;height:54px;border-radius:16px">
-                <img data-img="512x512.png" alt="Image to PDF and Edit PDF icon">
+                <img data-img="512x512.png" alt="PDF icon">
               </div>
               <div style="min-width:0">
-                <h3>Lite PDF Reader: PDF-Centric Features</h3>
+                <h3>Image to PDF & PDF Editor</h3>
                 <p class="sub">
-                  Read and organize PDFs anytime. Highlight, underline, add notes, extract text, save pages as images,
-                  merge & split PDFs, and compress large files: no registration or hidden fees.
+                  Convert ảnh sang PDF, highlight/annotate, merge/split và quản lý PDF mượt.
                 </p>
               </div>
             </div>
-            <a class="btn primary" href="https://play.google.com/store/apps/details?id=pdf.free.pdfreaderfree.reader.pdf.view.lovepdf">Get on Google Play <span class="arrow">↗</span></a>
+            <a class="btn primary" href="https://play.google.com/store/apps/details?id=pdf.free.pdfreaderfree.reader.pdf.view.lovepdf">Mở trên Google Play <span class="arrow">↗</span></a>
           </div>
 
           <div class="feature-grid">
-            <div class="feat">
-              <b>Edit & Annotate</b>
-              <span>Highlight, underline, add notes, and keep your reading organized.</span>
-            </div>
-            <div class="feat">
-              <b>Convert & Export</b>
-              <span>Image → PDF, PDF → TXT, save pages as images, extract images from PDF.</span>
-            </div>
-            <div class="feat">
-              <b>Optimize PDFs</b>
-              <span>Merge/split documents and compress files to save storage.</span>
-            </div>
+            <div class="feat"><b>Convert nhanh</b><span>Image → PDF, sắp xếp trang trước khi xuất.</span></div>
+            <div class="feat"><b>Chỉnh sửa gọn</b><span>Annotate, highlight, ký tên cơ bản.</span></div>
+            <div class="feat"><b>Tối ưu file</b><span>Merge/split/compress để chia sẻ nhanh.</span></div>
           </div>
 
           <div class="shots">
             <h4>Screenshots</h4>
-            <div class="strip" aria-label="PDF app screenshots">
-              <div class="shot wide"><img data-img="feature.jpg" alt="PDF app banner"></div>
-              <div class="shot tall"><img data-img="1.jpg" alt="PDF screenshot 1"></div>
-              <div class="shot tall"><img data-img="2.jpg" alt="PDF screenshot 2"></div>
-              <div class="shot tall"><img data-img="3.jpg" alt="PDF screenshot 3"></div>
-              <div class="shot tall"><img data-img="4.jpg" alt="PDF screenshot 4"></div>
-              <div class="shot tall"><img data-img="5.jpg" alt="PDF screenshot 5"></div>
-              <div class="shot wide"><img data-img="6.jpg" alt="PDF screenshot 6"></div>
-              <div class="shot"><img data-img="7.jpg" alt="PDF screenshot 7"></div>
+            <div class="strip">
+              <div class="shot wide"><img data-img="feature.jpg" alt="PDF banner"></div>
+              <div class="shot tall"><img data-img="1.jpg" alt="PDF shot 1"></div>
+              <div class="shot tall"><img data-img="2.jpg" alt="PDF shot 2"></div>
+              <div class="shot tall"><img data-img="3.jpg" alt="PDF shot 3"></div>
+              <div class="shot tall"><img data-img="4.jpg" alt="PDF shot 4"></div>
+              <div class="shot tall"><img data-img="5.jpg" alt="PDF shot 5"></div>
+              <div class="shot wide"><img data-img="6.jpg" alt="PDF shot 6"></div>
+              <div class="shot"><img data-img="7.jpg" alt="PDF shot 7"></div>
             </div>
           </div>
 
           <div class="note">
-            <div class="badge">✅</div>
+            <div class="i">✓</div>
             <p>
-              <b>Best workflow:</b> Scan & generate codes with QR Scanner, open office files with Document Reader,
-              and handle conversions + editing with Image to PDF: a clean, simple productivity stack.
+              Gợi ý: giữ UI tối giản trong WebView giúp tăng trust (nhất là khi bạn đặt trang này sau màn Splash/Onboarding).
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
     <footer>
-      <div class="wrap">
-        <div class="foot">
-          <div>© <span id="y"></span> Productivity Apps. All rights reserved.</div>
-          <div>
-            Images base:
-            <span class="mutelink">snowbird33.github.io/img/</span>
-          </div>
-        </div>
+      <div class="foot">
+        <div>© <span id="y"></span> Productivity Suite</div>
+        <div>Ảnh: <span class="link">snowbird33.github.io/img/</span></div>
       </div>
     </footer>
   </main>
 
   <script>
-    // Change this if you move images to another folder.
+    // Base folder ảnh
     const IMG_BASE = "https://snowbird33.github.io/img/";
 
-    // Auto-apply IMG_BASE to all images using data-img
+    // Auto set src cho mọi img có data-img
     document.querySelectorAll("img[data-img]").forEach(img => {
       const name = img.getAttribute("data-img");
       img.src = IMG_BASE + name;
       img.loading = img.loading || "lazy";
       img.decoding = img.decoding || "async";
-
-      // Simple fallback if a file name is wrong
-      img.addEventListener("error", () => {
-        img.style.opacity = "0.6";
-        img.alt = (img.alt || "Image") + " (missing)";
-      }, { once: true });
+      img.addEventListener("error", () => { img.style.opacity = "0.55"; }, { once: true });
     });
 
-    // Smooth scroll for in-page anchors (WebView-friendly)
+    // Smooth scroll anchor (WebView-friendly)
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener("click", (e) => {
         const id = a.getAttribute("href");
@@ -791,7 +585,6 @@
       });
     });
 
-    // Footer year
     document.getElementById("y").textContent = new Date().getFullYear();
   </script>
 </body>
