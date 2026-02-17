@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quay Thưởng Lì Xì</title>
+  <style>
+    :root{--bg1:#0b1020;--bg2:#101b3a;--accent:#f59e0b;--shadow:0 20px 60px rgba(0,0,0,.35);--radius:18px}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",sans-serif;
+      background:
+        radial-gradient(1200px 700px at 20% 10%, #1a2a6c 0%, rgba(26,42,108,0) 55%),
+        radial-gradient(900px 700px at 90% 20%, #b21f1f 0%, rgba(178,31,31,0) 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      color:#e5e7eb;
+      display:grid;
+      place-items:center;
+      padding:20px
+    }
+    .wrap{width:min(980px,100%);display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+    @media (max-width:880px){.wrap{grid-template-columns:1fr;gap:14px}}
+    .panel{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      backdrop-filter:blur(10px)
+    }
+    .head{padding:18px 18px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .title{font-weight:900;margin:0;font-size:20px}
+    .sub{margin:6px 0 0;color:rgba(229,231,235,.8);font-size:13px;line-height:1.4}
+    .badge{
+      font-size:12px;padding:8px 10px;border-radius:999px;
+      background:rgba(245,158,11,.18);
+      border:1px solid rgba(245,158,11,.35);
+      color:#fde68a;white-space:nowrap;max-width:74ch;overflow:hidden;text-overflow:ellipsis
+    }
+    .wheel-area{padding:14px 18px 18px;display:grid;place-items:center;gap:14px}
+    .wheel-wrap{position:relative;width:min(420px,92vw);aspect-ratio:1/1;display:grid;place-items:center}
+    canvas{
+      width:100%;height:100%;border-radius:50%;
+      box-shadow:0 18px 50px rgba(0,0,0,.45);
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), rgba(255,255,255,0) 55%)
+    }
+    .pointer{
+      position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+      width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:34px solid var(--accent);
+      filter:drop-shadow(0 8px 10px rgba(0,0,0,.35))
+    }
+    .hub{
+      position:absolute;width:92px;height:92px;border-radius:50%;
+      background:radial-gradient(circle at 35% 35%, #fff 0%, #fff 35%, #f8fafc 60%, #e2e8f0 100%);
+      border:6px solid rgba(253,230,138,.9);
+      box-shadow:0 14px 30px rgba(0,0,0,.35);
+      display:grid;place-items:center;
+      color:#111827;font-weight:1000;text-align:center;line-height:1.05;
+      user-select:none;cursor:pointer
+    }
+    .hub small{display:block;font-weight:900;color:#b45309;margin-top:2px;font-size:11px}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+    button{
+      appearance:none;border:0;border-radius:14px;padding:12px 14px;font-weight:900;
+      cursor:pointer;transition:transform .08s ease;user-select:none
+    }
+    button:active{transform:translateY(1px) scale(.99)}
+    .btn-spin{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#111827;min-width:170px;box-shadow:0 12px 24px rgba(245,158,11,.25)}
+    .btn-reset{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#e5e7eb}
+    .btn-audio{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.28);color:#bbf7d0}
+    .note{font-size:12px;color:rgba(229,231,235,.78);text-align:center;max-width:620px;line-height:1.45}
+    .side{padding:18px;display:flex;flex-direction:column;gap:12px}
+    .card{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .label{font-size:12px;color:rgba(229,231,235,.78);margin-bottom:6px}
+    .value{font-size:22px;font-weight:1000;letter-spacing:.2px}
+    .value span{color:#fde68a}
+    .history{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow:auto;padding-right:4px}
+    .item{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:10px 10px;border-radius:14px;
+      background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12)
+    }
+    .item b{color:#fde68a}
+    .item small{color:rgba(229,231,235,.75)}
+    .mini{font-size:12px;color:rgba(229,231,235,.8)}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
+    .overlay.show{display:flex}
+    .modal{width:min(560px,100%);background:#0b1226;border:1px solid rgba(255,255,255,.14);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+    .modal-top{padding:16px 18px;background:linear-gradient(135deg, rgba(245,158,11,.18), rgba(239,68,68,.12));border-bottom:1px solid rgba(255,255,255,.10)}
+    .modal-top h2{margin:0;font-size:18px}
+    .modal-body{padding:16px 18px 18px;display:grid;gap:10px}
+    .prize{font-size:38px;font-weight:1000;color:#fde68a;line-height:1.05;margin:4px 0 0}
+    .modal-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding:0 18px 18px}
+    .btn-ok{background:linear-gradient(135deg,#22c55e,#16a34a);color:#06210f;min-width:120px}
+    .btn-close{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);color:#e5e7eb}
+    .confetti{position:fixed;inset:0;pointer-events:none;z-index:11;overflow:hidden;display:none}
+    .confetti.show{display:block}
+    .confetti i{position:absolute;top:-10px;width:10px;height:16px;opacity:.95;border-radius:3px;animation:fall 1.4s linear forwards}
+    @keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:1}}
+  </style>
+</head>
+<body>
+  <audio id="bgMusic" src="https://snowbird33.github.io/xx.mp3" preload="auto" loop></audio>
+
+  <div class="wrap">
+    <section class="panel">
+      <div class="head">
+        <div>
+          <h1 class="title">Quay Thưởng Lì Xì</h1>
+        </div>
+      </div>
+
+      <div class="wheel-area">
+        <div class="wheel-wrap">
+          <div class="pointer"></div>
+          <canvas id="wheel" width="600" height="600"></canvas>
+          <div class="hub" id="hub">QUAY<small>LÌ XÌ</small></div>
+        </div>
+
+        <div class="controls">
+          <button class="btn-spin" id="spinBtn">Quay ngay</button>
+          <button class="btn-audio" id="audioBtn">🔊 Nhạc: Bật</button>
+          <button class="btn-reset" id="resetBtn">Xóa lịch sử</button>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="side">
+        <div class="card">
+          <div class="label">Kết quả gần nhất</div>
+          <div class="value" id="latest">Chưa quay</div>
+          <div class="mini" id="latestTime"></div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <div>
+              <div class="label">Tổng số lượt quay</div>
+              <div class="value"><span id="count">0</span> lượt</div>
+            </div>
+            <div>
+              <div class="label">Tổng lì xì</div>
+              <div class="value"><span id="sum">0đ</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="label">Lịch sử</div>
+          <div class="history" id="history"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-top"><h2 id="modalTitle">Kết quả</h2></div>
+      <div class="modal-body">
+        <div class="prize" id="prizeText">0đ</div>
+        <div class="mini" id="prizeHint">Chúc bạn may mắn 😄</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-close" id="closeBtn">Đóng</button>
+        <button class="btn-ok" id="okBtn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <script>
+    const segments = [
+      { key:"10k",  label:"10.000", value:10000,  prob:50.0,  angleWeight:1.00 },
+      { key:"20k",  label:"20.000", value:20000,  prob:25.0,  angleWeight:1.00 },
+      { key:"50k",  label:"50.000", value:50000,  prob:15.0,  angleWeight:1.00 },
+      { key:"100k", label:"100.000",value:100000, prob:7.0,   angleWeight:1.00 },
+      { key:"200k", label:"200.000",value:200000, prob:1.999, angleWeight:0.85 },
+      { key:"500k", label:"500.000",value:500000, prob:0.001, angleWeight:1.70 },
+      { key:"ny",   label:"Chúc mừng năm mới", value:0, prob:1.0, angleWeight:0.35 }
+    ];
+
+    const TWO_PI = Math.PI * 2;
+    const pointerAngle = (3*Math.PI/2);
+
+    const fmtVND = (n) => new Intl.NumberFormat("vi-VN").format(n) + "đ";
+    const nowStr = () => new Date().toLocaleString("vi-VN");
+
+    function formatPercent(p){
+      if (p < 0.01) return p.toFixed(3) + "%";
+      if (p < 1) return p.toFixed(3).replace(/0+$/,"").replace(/\.$/,"") + "%";
+      return p.toFixed(3).replace(/0+$/,"").replace(/\.$/,"") + "%";
+    }
+
+    function pickWeightedIndexByProb(list){
+      const total = list.reduce((a,s)=>a+s.prob,0);
+      let r = Math.random() * total;
+      for(let i=0;i<list.length;i++){
+        r -= list[i].prob;
+        if(r <= 0) return i;
+      }
+      return list.length - 1;
+    }
+
+    function buildAngleMap(){
+      const totalW = segments.reduce((a,s)=>a+s.angleWeight,0);
+      let acc = 0;
+      const map = segments.map(s=>{
+        const start = acc;
+        const span = TWO_PI * (s.angleWeight / totalW);
+        const end = start + span;
+        acc = end;
+        return { start, end, center:(start+end)/2 };
+      });
+      map[map.length-1].end = TWO_PI;
+      map[map.length-1].center = (map[map.length-1].start + map[map.length-1].end)/2;
+      return map;
+    }
+
+    let angleMap = buildAngleMap();
+
+    function indexFromRotation(rot){
+      let r = rot % TWO_PI; if(r < 0) r += TWO_PI;
+      let angle = pointerAngle - r;
+      angle %= TWO_PI; if(angle < 0) angle += TWO_PI;
+      for(let i=0;i<angleMap.length;i++){
+        const a = angleMap[i];
+        if(angle >= a.start && angle < a.end) return i;
+      }
+      return angleMap.length - 1;
+    }
+
+    const canvas = document.getElementById("wheel");
+    const ctx = canvas.getContext("2d");
+    const cx = canvas.width/2, cy = canvas.height/2;
+    const radius = canvas.width * 0.46;
+
+    let rotation = 0;
+    let spinning = false;
+
+    function drawWheel(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius+18, 0, TWO_PI);
+      ctx.strokeStyle = "rgba(253,230,138,.55)";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+      ctx.restore();
+
+      for(let i=0;i<segments.length;i++){
+        const seg = segments[i];
+        const a = angleMap[i];
+        const a0 = rotation + a.start;
+        const a1 = rotation + a.end;
+
+        let fill;
+        if(seg.key === "500k") fill = "rgba(34,197,94,.92)";
+        else if(seg.key === "ny") fill = "rgba(96,165,250,.90)";
+        else fill = (i % 2 === 0) ? "rgba(245,158,11,.92)" : "rgba(239,68,68,.86)";
+
+        ctx.beginPath();
+        ctx.moveTo(cx,cy);
+        ctx.arc(cx,cy,radius,a0,a1);
+        ctx.closePath();
+        ctx.fillStyle = fill;
+        ctx.fill();
+
+        ctx.strokeStyle = "rgba(255,255,255,.18)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(cx,cy);
+        ctx.rotate(a0 + (a1-a0)/2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "rgba(17,24,39,.95)";
+
+        if(seg.key === "ny"){
+          ctx.font = "1000 16px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+          const lines = ["CHÚC MỪNG","NĂM MỚI"];
+          const x = radius - 14;
+          const y0 = -6;
+          const lh = 18;
+          for(let li=0; li<lines.length; li++) ctx.fillText(lines[li], x, y0 + li*lh);
+        } else {
+          ctx.font = "1000 20px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+          ctx.fillText(seg.label, radius - 14, 8);
+        }
+        ctx.restore();
+      }
+
+      ctx.beginPath();
+      ctx.arc(cx,cy,radius*0.62,0,TWO_PI);
+      ctx.fillStyle = "rgba(15,23,42,.22)";
+      ctx.fill();
+    }
+
+    const spinBtn = document.getElementById("spinBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const overlay = document.getElementById("overlay");
+    const prizeText = document.getElementById("prizeText");
+    const prizeHint = document.getElementById("prizeHint");
+    const modalTitle = document.getElementById("modalTitle");
+    const okBtn = document.getElementById("okBtn");
+    const closeBtn = document.getElementById("closeBtn");
+    const confetti = document.getElementById("confetti");
+
+    const latest = document.getElementById("latest");
+    const latestTime = document.getElementById("latestTime");
+    const historyEl = document.getElementById("history");
+    const countEl = document.getElementById("count");
+    const sumEl = document.getElementById("sum");
+    const probBadge = document.getElementById("probBadge");
+
+    let history = [];
+    let sum = 0;
+
+    function updateStats(){
+      countEl.textContent = String(history.length);
+      sumEl.textContent = fmtVND(sum);
+      if(history.length === 0){
+        latest.textContent = "Chưa quay";
+        latestTime.textContent = "";
+      }
+    }
+
+    function renderHistory(){
+      historyEl.innerHTML = "";
+      if(history.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "mini";
+        empty.textContent = "Chưa có lịch sử. Nhấn Quay ngay để bắt đầu.";
+        historyEl.appendChild(empty);
+        return;
+      }
+      history.slice().reverse().forEach(h=>{
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<div><b>${h.display}</b><div><small>${h.time}</small></div></div><div><small>#${h.id}</small></div>`;
+        historyEl.appendChild(div);
+      });
+    }
+
+    function showModal(title, mainText, hint){
+      modalTitle.textContent = title;
+      prizeText.textContent = mainText;
+      prizeHint.textContent = hint;
+      overlay.classList.add("show");
+    }
+
+    function hideModal(){ overlay.classList.remove("show"); }
+
+    function popConfetti(){
+      confetti.innerHTML = "";
+      confetti.classList.add("show");
+      const colors = ["#fde68a","#f59e0b","#ef4444","#22c55e","#60a5fa","#f472b6","#a78bfa"];
+      const pieces = 90;
+      for(let i=0;i<pieces;i++){
+        const p = document.createElement("i");
+        p.style.left = (Math.random()*100) + "vw";
+        p.style.animationDelay = (Math.random()*0.2) + "s";
+        p.style.animationDuration = (1.0 + Math.random()*0.9) + "s";
+        const size = 8 + Math.random()*10;
+        p.style.width = Math.max(6, size*0.55) + "px";
+        p.style.height = size + "px";
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
+        confetti.appendChild(p);
+      }
+      setTimeout(()=>confetti.classList.remove("show"), 1600);
+    }
+
+    const bgMusic = document.getElementById("bgMusic");
+    const audioBtn = document.getElementById("audioBtn");
+    let audioEnabled = true;
+
+    async function tryPlayMusic(){
+      if(!audioEnabled) return;
+      try{
+        bgMusic.volume = 0.35;
+        await bgMusic.play();
+        audioBtn.textContent = "🔊 Nhạc: Bật";
+      }catch(e){
+        audioBtn.textContent = "🔊 Nhạc: Bật (chạm để phát)";
+      }
+    }
+
+    async function setAudioEnabled(on){
+      audioEnabled = on;
+      audioBtn.textContent = on ? "🔊 Nhạc: Bật" : "🔇 Nhạc: Tắt";
+      try{
+        if(on){
+          bgMusic.volume = 0.35;
+          await bgMusic.play();
+        }else{
+          bgMusic.pause();
+          bgMusic.currentTime = 0;
+        }
+      }catch(e){
+        if(on) audioBtn.textContent = "🔊 Nhạc: Bật (chạm để phát)";
+      }
+    }
+
+    audioBtn.addEventListener("click", ()=> setAudioEnabled(!audioEnabled));
+    window.addEventListener("load", tryPlayMusic);
+    const unlock = async () => { await tryPlayMusic(); };
+    document.addEventListener("pointerdown", unlock, { once:true });
+    document.addEventListener("touchstart", unlock, { once:true });
+    document.addEventListener("click", unlock, { once:true });
+
+    function spin(){
+      if(spinning) return;
+      spinning = true;
+
+      if(audioEnabled) bgMusic.play().catch(()=>{});
+
+      const targetIndex = pickWeightedIndexByProb(segments);
+      const targetCenter = angleMap[targetIndex].center;
+
+      let desired = pointerAngle - targetCenter;
+      const duration = 5000 + Math.random()*5000;
+      const extraTurns = 7 + Math.floor((duration - 5000) / 700);
+      desired += extraTurns * TWO_PI;
+
+      const start = rotation;
+      const end = desired;
+      const t0 = performance.now();
+      const easeOutCubic = (t)=> 1 - Math.pow(1-t,3);
+
+      function frame(t){
+        const p = Math.min(1, (t - t0)/duration);
+        rotation = start + (end - start)*easeOutCubic(p);
+        drawWheel();
+
+        if(p < 1){
+          requestAnimationFrame(frame);
+        } else {
+          const idx = indexFromRotation(rotation);
+          const seg = segments[idx];
+
+          let display, title, hint;
+          if(seg.value > 0){
+            display = fmtVND(seg.value);
+            title = "Chúc mừng bạn nhận được";
+            hint = "Lì xì đến rồi 😄";
+            sum += seg.value;
+          }else{
+            display = "Chúc mừng năm mới 🎉";
+            title = "May mắn đặc biệt";
+            hint = "Không có giá trị tiền : nhưng là lời chúc cực xịn 😄";
+          }
+
+          const entry = { id: history.length+1, amount: seg.value, display, time: nowStr() };
+          history.push(entry);
+
+          latest.innerHTML = `<span>${display}</span>`;
+          latestTime.textContent = entry.time;
+
+          updateStats();
+          renderHistory();
+          popConfetti();
+          showModal(title, display, hint);
+
+          spinning = false;
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function reset(){
+      if(spinning) return;
+      history = [];
+      sum = 0;
+      updateStats();
+      renderHistory();
+    }
+
+    spinBtn.addEventListener("click", spin);
+    document.getElementById("hub").addEventListener("click", spin);
+    resetBtn.addEventListener("click", reset);
+    okBtn.addEventListener("click", hideModal);
+    closeBtn.addEventListener("click", hideModal);
+    overlay.addEventListener("click", (e)=>{ if(e.target === overlay) hideModal(); });
+
+
+    drawWheel();
+    updateStats();
+    renderHistory();
+    tryPlayMusic();
+  </script>
+</body>
+</html>
