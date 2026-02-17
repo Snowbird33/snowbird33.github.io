@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Quay Thưởng Lì Xì 1</title>
+  <title>Quay Thưởng Lì Xì</title>
   <style>
     :root{--bg1:#0b1020;--bg2:#101b3a;--accent:#f59e0b;--shadow:0 20px 60px rgba(0,0,0,.35);--radius:18px}
     *{box-sizing:border-box}
@@ -30,19 +30,8 @@
       overflow:hidden;
       backdrop-filter:blur(10px)
     }
-    .head{
-  padding:18px 18px 14px;
-  display:flex;
-  justify-content:center;
-  text-align:center;
-}    .title{font-weight:900;margin:0;font-size:20px}
-    .sub{margin:6px 0 0;color:rgba(229,231,235,.8);font-size:13px;line-height:1.4}
-    .badge{
-      font-size:12px;padding:8px 10px;border-radius:999px;
-      background:rgba(245,158,11,.18);
-      border:1px solid rgba(245,158,11,.35);
-      color:#fde68a;white-space:nowrap;max-width:74ch;overflow:hidden;text-overflow:ellipsis
-    }
+    .head{padding:18px 18px 14px;display:flex;justify-content:center;text-align:center}
+    .title{font-weight:1000;margin:0;font-size:22px}
     .wheel-area{padding:14px 18px 18px;display:grid;place-items:center;gap:14px}
     .wheel-wrap{position:relative;width:min(420px,92vw);aspect-ratio:1/1;display:grid;place-items:center}
     canvas{
@@ -73,8 +62,7 @@
     button:active{transform:translateY(1px) scale(.99)}
     .btn-spin{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#111827;min-width:170px;box-shadow:0 12px 24px rgba(245,158,11,.25)}
     .btn-reset{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#e5e7eb}
-    .btn-audio{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.28);color:#bbf7d0}
-    .note{font-size:12px;color:rgba(229,231,235,.78);text-align:center;max-width:620px;line-height:1.45}
+    .btn-audio{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.28);color:#bbf7d0;min-width:140px}
     .side{padding:18px;display:flex;flex-direction:column;gap:12px}
     .card{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
@@ -112,9 +100,7 @@
   <div class="wrap">
     <section class="panel">
       <div class="head">
-        <div>
-          <h1 class="title">Quay Thưởng Lì Xì</h1>
-        </div>
+        <h1 class="title">Quay Thưởng Lì Xì</h1>
       </div>
 
       <div class="wheel-area">
@@ -129,7 +115,6 @@
           <button class="btn-audio" id="audioBtn">🔊 Nhạc: Bật</button>
           <button class="btn-reset" id="resetBtn">Xóa lịch sử</button>
         </div>
-
       </div>
     </section>
 
@@ -167,7 +152,7 @@
       <div class="modal-top"><h2 id="modalTitle">Kết quả</h2></div>
       <div class="modal-body">
         <div class="prize" id="prizeText">0đ</div>
-        <div class="mini" id="prizeHint">Chúc bạn may mắn 😄</div>
+        <div class="mini" id="prizeHint"></div>
       </div>
       <div class="modal-actions">
         <button class="btn-close" id="closeBtn">Đóng</button>
@@ -194,12 +179,6 @@
 
     const fmtVND = (n) => new Intl.NumberFormat("vi-VN").format(n) + "đ";
     const nowStr = () => new Date().toLocaleString("vi-VN");
-
-    function formatPercent(p){
-      if (p < 0.01) return p.toFixed(3) + "%";
-      if (p < 1) return p.toFixed(3).replace(/0+$/,"").replace(/\.$/,"") + "%";
-      return p.toFixed(3).replace(/0+$/,"").replace(/\.$/,"") + "%";
-    }
 
     function pickWeightedIndexByProb(list){
       const total = list.reduce((a,s)=>a+s.prob,0);
@@ -307,7 +286,9 @@
     }
 
     const spinBtn = document.getElementById("spinBtn");
+    const hub = document.getElementById("hub");
     const resetBtn = document.getElementById("resetBtn");
+
     const overlay = document.getElementById("overlay");
     const prizeText = document.getElementById("prizeText");
     const prizeHint = document.getElementById("prizeHint");
@@ -321,7 +302,6 @@
     const historyEl = document.getElementById("history");
     const countEl = document.getElementById("count");
     const sumEl = document.getElementById("sum");
-    const probBadge = document.getElementById("probBadge");
 
     let history = [];
     let sum = 0;
@@ -391,32 +371,26 @@
         await bgMusic.play();
         audioBtn.textContent = "🔊 Nhạc: Bật";
       }catch(e){
-        audioBtn.textContent = "🔊 Nhạc: Bật (chạm để phát)";
+        audioBtn.textContent = "🔊 Nhạc: Bật";
       }
     }
 
-    async function setAudioEnabled(on){
+    function setAudioEnabled(on){
       audioEnabled = on;
       audioBtn.textContent = on ? "🔊 Nhạc: Bật" : "🔇 Nhạc: Tắt";
-      try{
-        if(on){
-          bgMusic.volume = 0.35;
-          await bgMusic.play();
-        }else{
-          bgMusic.pause();
-          bgMusic.currentTime = 0;
-        }
-      }catch(e){
-        if(on) audioBtn.textContent = "🔊 Nhạc: Bật (chạm để phát)";
+      if(on){
+        bgMusic.volume = 0.35;
+        bgMusic.play().catch(()=>{});
+      }else{
+        bgMusic.pause();
       }
     }
 
     audioBtn.addEventListener("click", ()=> setAudioEnabled(!audioEnabled));
     window.addEventListener("load", tryPlayMusic);
-    const unlock = async () => { await tryPlayMusic(); };
-    document.addEventListener("pointerdown", unlock, { once:true });
-    document.addEventListener("touchstart", unlock, { once:true });
-    document.addEventListener("click", unlock, { once:true });
+    document.addEventListener("pointerdown", tryPlayMusic, { once:true });
+    document.addEventListener("touchstart", tryPlayMusic, { once:true });
+    document.addEventListener("click", tryPlayMusic, { once:true });
 
     function spin(){
       if(spinning) return;
@@ -463,7 +437,7 @@
           const entry = { id: history.length+1, amount: seg.value, display, time: nowStr() };
           history.push(entry);
 
-          latest.innerHTML = `<span>${display}</span>`;
+          latest.textContent = display;
           latestTime.textContent = entry.time;
 
           updateStats();
@@ -486,12 +460,11 @@
     }
 
     spinBtn.addEventListener("click", spin);
-    document.getElementById("hub").addEventListener("click", spin);
+    hub.addEventListener("click", spin);
     resetBtn.addEventListener("click", reset);
     okBtn.addEventListener("click", hideModal);
     closeBtn.addEventListener("click", hideModal);
     overlay.addEventListener("click", (e)=>{ if(e.target === overlay) hideModal(); });
-
 
     drawWheel();
     updateStats();
@@ -500,4 +473,3 @@
   </script>
 </body>
 </html>
-
