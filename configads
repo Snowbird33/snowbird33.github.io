@@ -10,6 +10,6 @@
     "native_full_mainintro_2": false,
     "native_300_tiptouse": false,
     "native_300_language": false,
-    "inter_mainintro": true
+    "inter_mainintro": false
   }
 }
