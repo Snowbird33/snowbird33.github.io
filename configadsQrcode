@@ -7,7 +7,7 @@
     "native_300_mainintro_2": false,
     "native_300_mainintro_3": false,
     "native_full_mainintro_1": false,
-    "native_full_mainintro_2": false,
+    "native_full_mainintro_2": true,
     "native_300_tiptouse": false,
     "native_300_language": false,
     "inter_mainintro": false
