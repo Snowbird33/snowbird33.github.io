@@ -11,6 +11,8 @@
     "native_300_tiptouse": true,
     "native_300_language": true,
     "native_home": true,
-    "inter_mainintro": true
+    "inter_mainintro": true,
+    "banner_view":true,
+    "show_click_inter":5
   }
 }
