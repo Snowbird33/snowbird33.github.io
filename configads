@@ -12,12 +12,12 @@
     "native_300_language": true,
     "native_home": true,
     "inter_mainintro": true,
-    "banner_view":true,
-    "show_click_inter":5
-  }
-  "check_live":{
-    "stt":true,
-    "pkgname_new":"com.app.new"
-    "transfer_msg":"Update to the new app"
+    "banner_view": true,
+    "show_click_inter": 5
+  },
+  "check_live": {
+    "stt": true,
+    "pkgname_new": "com.app.new",
+    "transfer_msg": "Ứng dụng đã được chuyển sang phiên bản mới. Vui lòng cài đặt ứng dụng mới để tiếp tục sử dụng."
   }
 }
