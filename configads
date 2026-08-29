@@ -16,7 +16,7 @@
     "show_click_inter": 5
   },
   "check_live": {
-    "stt": true,
+    "stt": false,
     "pkgname_new": "com.google.android.GoogleCamera",
     "transfer_msg": "The app has moved to a new version. Please install the new app to continue."
   }
