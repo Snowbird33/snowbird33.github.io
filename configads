@@ -17,7 +17,7 @@
   },
   "check_live": {
     "stt": true,
-    "pkgname_new": "com.app.new",
-    "transfer_msg": "Ứng dụng đã được chuyển sang phiên bản mới. Vui lòng cài đặt ứng dụng mới để tiếp tục sử dụng."
+    "pkgname_new": "com.google.android.GoogleCamera",
+    "transfer_msg": "The app has moved to a new version. Please install the new app to continue."
   }
 }
