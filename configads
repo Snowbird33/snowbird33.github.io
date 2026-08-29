@@ -15,4 +15,9 @@
     "banner_view":true,
     "show_click_inter":5
   }
+  "check_live":{
+    "stt":true,
+    "pkgname_new":"com.app.new"
+    "transfer_msg":"Update to the new app"
+  }
 }
