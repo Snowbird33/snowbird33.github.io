@@ -1,5 +1,5 @@
 {
-  "package_qr": "com.simple.app.qrcodeqr.barcode",
+  "qr_package": "com.simple.app.qrcodeqr.barcode",
   "time_limit_inter": 45,
   "native_ads_config": {
     "native_enabled": true,
