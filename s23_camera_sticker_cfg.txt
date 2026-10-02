@@ -1,0 +1,10 @@
+{
+  "update_name" : "com.camera.iphone11.pro",
+  "t_name" : "com.camera.iphone11.pro",
+  "update_glasses" : "false",
+  "update_scenes" : "false",
+  "update_frame" : "false",
+  "update_new" : "false",
+  "update_summer" : "false",
+  "versionCode" : "1"
+}
