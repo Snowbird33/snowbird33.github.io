@@ -15,7 +15,7 @@
     "inter_mainintro": true,
     "banner_view": true,
     "show_click_inter": 5,
-    "reward_dialog"= true
+    "reward_dialog": true
   },
   "check_live": {
     "stt": false,
